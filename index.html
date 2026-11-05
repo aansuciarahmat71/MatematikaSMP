@@ -3627,7 +3627,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       if (typeof j.vol === 'number') st.vol = Math.max(0, Math.min(1, j.vol));
     }
   } catch (e) { /* abaikan */ }
-  st.on = { music: true, bird: true, wave: true, nature: true }; /* semua suara menyatu, tidak ada pilihan terpisah */
+  st.on = { music: true, bird: true, nature: true }; /* semua suara menyatu, tidak ada pilihan terpisah */
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ theme: st.theme, vol: st.vol })); } catch (e) { /* abaikan */ } }
 
   var host = document.querySelector('.top .in'); if (!host) return;
@@ -3647,12 +3647,12 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   applyTheme();
 
   var AC = window.AudioContext || window.webkitAudioContext;
-  var LAB = { music: 'Musik', bird: 'Burung', wave: 'Ombak', nature: 'Alam' };
+  var LAB = { music: 'Musik', bird: 'Burung', nature: 'Alam' };
   var panel = document.createElement('div'); panel.className = 'apanel'; panel.id = 'apanel'; panel.hidden = true;
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Suara latar');
   panel.innerHTML = '<div class="aprow"><b>Suara latar</b><button type="button" class="btn" id="aplay">Putar</button></div>' +
     '<label class="sl apvol"><span>Volume</span><input type="range" id="avol" min="0" max="100" step="1"><output id="avo" class="eq"></output></label>' +
-    '<p class="muted">' + (AC ? 'Satu paduan suara: musik instrumen lembut, kicau burung, deru ombak, angin, dan jangkrik. Dibuat langsung di perangkatmu.' : 'Browser ini belum mendukung suara latar.') + '</p>';
+    '<p class="muted">' + (AC ? 'Satu paduan suara: musik lo-fi santai untuk belajar atau bekerja, kicau burung, dan jangkrik. Dibuat langsung di perangkatmu.' : 'Browser ini belum mendukung suara latar.') + '</p>';
   document.body.appendChild(panel);
   var playBtn = document.getElementById('aplay'), vol = document.getElementById('avol'), vo = document.getElementById('avo');
   vol.value = Math.round(st.vol * 100); vo.textContent = vol.value;
@@ -3665,29 +3665,13 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { openPanel(false); btnSound.focus(); } });
 
   /* ---- mesin suara ---- */
-  var ctx = null, master, rev, bus = {}, noiseBuf, timers = [], running = false;
+  var ctx = null, master, rev, bus = {}, timers = [], running = false;
   var rnd = Math.random;
-  function mkNoise() {
-    var len = Math.floor(ctx.sampleRate * 4), b = ctx.createBuffer(2, len, ctx.sampleRate);
-    for (var c = 0; c < 2; c++) {
-      var d = b.getChannelData(c), last = 0;
-      for (var i = 0; i < len; i++) { last = (last + 0.02 * (rnd() * 2 - 1)) / 1.02; d[i] = last * 3.5; }
-      var fade = 2000; /* sambungan ujung-ke-awal dilunakkan supaya ulangan tidak berklik */
-      for (var k = 0; k < fade; k++) { var w = k / fade; d[k] *= w; d[len - 1 - k] *= w; }
-    }
-    return b;
-  }
   function mkImpulse(sec, decay) {
     var len = Math.floor(ctx.sampleRate * sec), b = ctx.createBuffer(2, len, ctx.sampleRate);
     for (var c = 0; c < 2; c++) { var d = b.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (rnd() * 2 - 1) * Math.pow(1 - i / len, decay); }
     return b;
   }
-  function loopNoise() { var s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true; return s; }
-  function lfoTo(param, freq, depth) {
-    var o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = freq; g.gain.value = depth;
-    o.connect(g); g.connect(param); o.start(); return o;
-  }
-
   function init() {
     ctx = new AC();
     master = ctx.createGain(); master.gain.value = st.vol;
@@ -3698,26 +3682,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       var g = ctx.createGain(); g.gain.value = st.on[k] ? 1 : 0; g.connect(master); bus[k] = g;
     });
     bus.music.connect(rev); bus.bird.connect(rev);
-    noiseBuf = mkNoise();
-    startWaves(); startWind();
     timers.push(setInterval(tick, 250));
-  }
-
-  function startWaves() {
-    /* dua lapisan deru ombak dengan periode berbeda supaya terdengar alami */
-    [[0.10, 600, 380], [0.067, 420, 260]].forEach(function (p, i) {
-      var src = loopNoise(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
-      lp.type = 'lowpass'; lp.frequency.value = p[1]; lp.Q.value = 0.6; g.gain.value = 0.9;
-      lfoTo(g.gain, p[0], 0.65); lfoTo(lp.frequency, p[0], p[2]);
-      src.connect(lp); lp.connect(g); g.connect(bus.wave);
-      src.start(0, i * 1.3);
-    });
-  }
-  function startWind() {
-    var src = loopNoise(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
-    bp.type = 'bandpass'; bp.frequency.value = 650; bp.Q.value = 0.7; g.gain.value = 0.38;
-    lfoTo(bp.frequency, 0.05, 280); lfoTo(g.gain, 0.08, 0.2);
-    src.connect(bp); bp.connect(g); g.connect(bus.nature); src.start(0, 2.1);
   }
 
   /* kicau burung */
@@ -3747,40 +3712,70 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
     }
   }
 
-  /* musik: kalimba lembut, tangga nada pentatonik, kord C - Am - F - G */
-  var C4 = 261.63, CHORDS = [[0, 4, 7], [-3, 0, 4], [-7, -3, 0], [-5, -1, 2]], PENT = [0, 2, 4, 7, 9, 12, 14, 16, 19];
+  /* musik pengantar belajar/kerja: lo-fi santai ~72 bpm, piano elektrik, bas, ketukan lembut, dan sedikit derak piringan hitam */
+  var C4 = 261.63;
   function fr(semi) { return C4 * Math.pow(2, semi / 12); }
-  function pluck(t, f, vel) {
-    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain();
-    o.type = 'triangle'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2; g2.gain.value = 0.25;
-    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vel, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
-    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(bus.music);
-    o.start(t); o2.start(t); o.stop(t + 1.9); o2.stop(t + 1.9);
+  var CH = { Cmaj7: [0, 4, 7, 11], Am7: [-3, 0, 4, 7], Dm7: [2, 5, 9, 12], G7: [-5, -1, 2, 5], Fmaj7: [-7, -3, 0, 4], Em7: [-8, -5, -1, 2] };
+  var ROOT = { Cmaj7: 0, Am7: -3, Dm7: 2, G7: -5, Fmaj7: -7, Em7: -8 };
+  var PROG = [['Cmaj7', 'Am7', 'Dm7', 'G7'], ['Fmaj7', 'Em7', 'Dm7', 'G7']];
+  var PENT = [0, 2, 4, 7, 9, 12, 14, 16];
+  var STEP = 60 / 72 / 2, nextStep = 0, stepIdx = 0, nextBird = 0, nextCr = 0, melIdx = 3, musIn = null, whiteBuf = null;
+  function musicIn() {
+    if (!musIn) { musIn = ctx.createBiquadFilter(); musIn.type = 'lowpass'; musIn.frequency.value = 2200; musIn.Q.value = 0.5; musIn.connect(bus.music); }
+    return musIn;
   }
-  function pad(t, ch) {
-    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 800; lp.connect(bus.music);
-    ch.forEach(function (semi) {
-      var o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = 'sine'; o.frequency.value = fr(semi - 12);
-      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 1.4); g.gain.exponentialRampToValueAtTime(0.0001, t + 5.6);
-      o.connect(g); g.connect(lp); o.start(t); o.stop(t + 5.8);
-    });
+  function white() {
+    if (!whiteBuf) { var len = ctx.sampleRate; whiteBuf = ctx.createBuffer(1, len, ctx.sampleRate); var d = whiteBuf.getChannelData(0); for (var i = 0; i < len; i++) d[i] = rnd() * 2 - 1; }
+    return whiteBuf;
   }
-  var STEP = 0.6, nextStep = 0, stepIdx = 0, nextBird = 0, nextCr = 0, lastNote = 7;
+  function noiseHit(t, dur, type, freq, q, vel) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = white(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(bus.music); s.start(t, rnd() * 0.5); s.stop(t + dur + 0.02);
+  }
+  function kick(t, vel) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.16);
+    g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    o.connect(g); g.connect(bus.music); o.start(t); o.stop(t + 0.32);
+  }
+  function epiano(t, f, vel, dur) {
+    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g2 = ctx.createGain(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2; g2.gain.value = 0.28;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vel, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(vel * 0.3, t + 0.5); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(musicIn());
+    o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+  }
+  function bass(t, f, vel, dur) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vel, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(bus.music); o.start(t); o.stop(t + dur + 0.05);
+  }
+  function crackle(t) { noiseHit(t, 0.012 + rnd() * 0.02, 'highpass', 3000 + rnd() * 3000, 0.7, 0.012 + rnd() * 0.015); }
   function scheduleStep(t, idx) {
-    var ch = CHORDS[Math.floor(idx / 8) % CHORDS.length];
-    if (idx % 8 === 0) pad(t, ch);
-    if (idx % 4 === 0 && rnd() < 0.9) pluck(t, fr(ch[0] - 12), 0.11);
-    if (rnd() < 0.58) {
-      var semi = rnd() < 0.7 ? ch[Math.floor(rnd() * 3)] + (rnd() < 0.5 ? 12 : 0) : PENT[Math.floor(rnd() * PENT.length)];
-      if (Math.abs(semi - lastNote) > 12) semi -= 12 * Math.sign(semi - lastNote);
-      lastNote = semi; pluck(t, fr(semi), 0.08 + rnd() * 0.05);
+    var bar = Math.floor(idx / 8), k = idx % 8, name = PROG[Math.floor(bar / 4) % 2][bar % 4], ch = CH[name];
+    var ts = t + (k % 2 ? 0.035 : 0); /* sedikit swing pada ketukan lemah */
+    if (k === 0) ch.forEach(function (semi, i) { epiano(t + i * 0.014, fr(semi), 0.03, 3.1); });
+    else if (k === 3) ch.forEach(function (semi, i) { epiano(ts + i * 0.012, fr(semi), 0.02, 1.3); });
+    var rs = ((ROOT[name] % 12) + 12) % 12 - 24;
+    if (k === 0) bass(t, fr(rs), 0.16, 1.5);
+    if (k === 5) bass(ts, fr(rs + (rnd() < 0.5 ? 0 : 7)), 0.11, 0.7);
+    if (k === 0 || k === 4 || (k === 3 && rnd() < 0.5)) kick(k === 3 ? ts : t, 0.2);
+    if (k === 2 || k === 6) noiseHit(t + 0.005, 0.14, 'bandpass', 1700, 0.8, 0.07);
+    noiseHit(ts, 0.035, 'highpass', 7000, 0.7, (k % 2 ? 0.007 : 0.012) * (0.6 + rnd() * 0.8));
+    if (k % 2 === 1 && rnd() < 0.35) {
+      melIdx = Math.max(0, Math.min(PENT.length - 1, melIdx + Math.floor(rnd() * 5) - 2));
+      epiano(ts, fr(PENT[melIdx] + 12), 0.03, 1.5);
     }
   }
   function tick() {
     if (!ctx || ctx.state !== 'running') return;
     var now = ctx.currentTime;
     while (nextStep < now + 0.8) { if (st.on.music) scheduleStep(Math.max(nextStep, now), stepIdx); nextStep += STEP; stepIdx++; }
+    if (st.on.music && rnd() < 0.4) crackle(now + rnd() * 0.25);
     if (now >= nextBird) { if (st.on.bird) birdCall(now + 0.05); nextBird = now + 1.6 + rnd() * 4.5; }
     if (now >= nextCr) { if (st.on.nature) cricket(now + 0.05); nextCr = now + 0.9 + rnd() * 0.8; }
   }
