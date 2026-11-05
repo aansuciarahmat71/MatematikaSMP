@@ -2807,7 +2807,6 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       cur.forEach((v, i) => { q('#pf' + i).value = v; });
       if (r.err) { q('#cerr').textContent = r.err; return; }
       sol = r.sol; q('#cerr').textContent = '';
-      if (cfg.onChange) cfg.onChange(cur);
       q('#cout').innerHTML = pwRender(sol, st);
       q('#cmu').disabled = st === 0; q('#cma').textContent = st >= sol.steps.length ? 'Ulangi' : 'Lanjut';
     }
@@ -2850,20 +2849,31 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   }
 
   function pwOp(c, kind, rk, title, desc, fields, ex, rule) {
-    const sq = kind === 'q5' || kind === 'q50';
-    c.innerHTML = rulesBox(rule) + '<div id="fcalc"></div>' +
-      (sq ? '<div class="card cmp"><h3 class="cmptitle">Cara kotak nilai tempat</h3><p class="muted cmpdesc" style="display:block">Kuadrat berarti bilangan dikali dirinya sendiri, jadi bisa dihitung dengan kotak nilai tempat, sama seperti perkalian 2 digit × 2 digit.</p><div id="sqplayer" style="margin-top:6px"></div></div>' : '') +
-      '<div id="sdpr"></div>';
-    let pl = null, last = null;
-    const onChange = sq ? (cur) => {
-      const n = parseInt(cur[0], 10);
-      if (!(n > 0) || n === last) return;
-      last = n;
-      if (!pl) pl = makePlayer($('#sqplayer'), { lesson: gLesson });
-      pl.set(n, n);
-    } : null;
-    const h = pwCard($('#fcalc'), { kind: kind, rk: rk, title: title, desc: desc, fields: fields, ex: ex, onChange: onChange });
+    if (kind === 'q5' || kind === 'q50') { pwSquare(c, kind, rk, title, desc, ex, rule); return; }
+    c.innerHTML = rulesBox(rule) + '<div id="fcalc"></div><div id="sdpr"></div>';
+    const h = pwCard($('#fcalc'), { kind: kind, rk: rk, title: title, desc: desc, fields: fields, ex: ex });
     sdPractice($('#sdpr'), rk, h.show);
+  }
+  /* Kuadrat: langsung memakai kotak nilai tempat, sama seperti perkalian 2 digit × 2 digit */
+  function pwSquare(c, kind, rk, title, desc, ex, rule) {
+    c.innerHTML = rulesBox(rule) + '<div class="card pop cmp"><div class="cmphead"><h3>' + title + '</h3><div class="chips" id="cex">' +
+      ex.map((v, i) => '<button type="button" class="chip sm" data-i="' + i + '">' + v[0] + '<sup>2</sup></button>').join('') + '</div></div>' +
+      '<p class="muted cmpdesc" style="display:block">' + desc + ' Kuadrat berarti bilangan dikali dirinya sendiri, jadi dihitung dengan kotak nilai tempat seperti perkalian 2 digit × 2 digit.</p>' +
+      '<form class="ins" id="cf" autocomplete="off"><label class="ni"><span>Bilangan</span><input class="field num" id="sqn" type="text" inputmode="numeric" maxlength="3"></label><span class="big" aria-hidden="true" style="padding-bottom:10px"><sup>2</sup></span>' +
+      '<button class="btn" type="submit">Hitung</button><button class="btn ghost" type="button" id="crand">Acak</button></form>' +
+      '<p class="err" id="cerr" style="margin:8px 0 0"></p><div id="sqplayer" style="margin-top:10px"></div></div><div id="sdpr"></div>';
+    const inp = $('#sqn'), er = $('#cerr'), pl = makePlayer($('#sqplayer'), { lesson: gLesson });
+    const set = (n) => { inp.value = n; er.textContent = ''; pl.set(+n, +n); };
+    $('#cex').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) set(ex[+b.dataset.i][0]); });
+    $('#crand').addEventListener('click', () => { const p = pwProblem(rk); if (p) set(p.cur[0]); });
+    $('#cf').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const r = pwCheck(kind, [inp.value]);
+      if (r.err) { er.textContent = r.err; return; }
+      set(r.a);
+    });
+    set(ex[0][0]);
+    sdPractice($('#sdpr'), rk, (a, b, pr) => { if (pr && pr.cur) { set(pr.cur[0]); inp.scrollIntoView({ block: 'center', behavior: 'smooth' }); } });
   }
 
   /* ----- soal dari buku (Soal Challenge) ----- */
