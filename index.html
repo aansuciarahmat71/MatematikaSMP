@@ -1,6 +1,8 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Seri Matematika SMP</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=IBM+Plex+Mono:wght@400;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <style>
 /* Tata letak: satu kolom 760px, bilah navigasi menempel di atas, kartu bergaris tinta seperti buku tulis kotak-kotak */
@@ -278,7 +280,7 @@ ol.steps .why{font-size:12.5px}
 .top nav a{padding:4px 10px;font-size:13px}
 main.in{padding-block:12px 48px}
 .top .in{max-width:980px}
-@media (max-width:1000px){.brand span{display:none}}
+
 
 .cmp{container-type:inline-size;padding:10px 12px;margin-top:10px}
 .cmphead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px}
@@ -381,6 +383,13 @@ main.in{padding-block:12px 48px}
 .sd-stairs{display:flex;align-items:flex-end;margin:12px 0 8px;overflow-x:auto;padding-bottom:2px}
 .sd-st{flex:0 0 auto;min-width:48px;border-left:3px solid var(--ink);border-top:3px solid var(--ink);padding:2px 10px;font:800 19px var(--f-display);background:var(--paper);display:flex;align-items:flex-start}
 .sd-st.t{background:var(--hi);color:var(--hi-ink)}
+/* tangga peta penjumlahan: ukuran setengah */
+.sd-two .sd-stairs{margin:6px 0 4px}
+.sd-two .sd-st{min-width:24px;padding:1px 5px;font-size:11px;border-left-width:2px;border-top-width:2px}
+.sd-two .sd-grp{padding:8px}
+.sd-two .sd-grp h4{font-size:15px;margin:3px 0 0}
+.sd-two .sd-badge{width:22px;height:22px;font-size:12px;border-width:1.5px}
+.sd-two .sd-grp p{font-size:13px}
 .sd-lv{display:inline-block;font:800 13px var(--f-body);padding:2px 10px;border-radius:999px;background:var(--ink);color:var(--paper)}
 .sd-srow{display:flex;align-items:center;gap:14px;width:100%;padding:6px 10px;border-radius:12px;border:2px solid transparent;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
 .sd-srow.on{border-color:var(--ink);background:var(--hi);color:var(--hi-ink)}
@@ -549,6 +558,16 @@ p{margin:.35em 0}
 #tkchips .chip[aria-pressed="true"],#opchips .chip[aria-pressed="true"],#bkset .chip[aria-pressed="true"]{background:var(--x);border-color:var(--x);color:var(--paper)}
 #sdsub{padding-bottom:8px}
 #sdtabs,#pwtabs,#mtabs{padding-bottom:8px}
+/* ===== Tombol tema dan suara latar ===== */
+.ctl{display:flex;gap:6px;flex:0 0 auto}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:34px;height:30px;padding:0 9px;border:2px solid var(--ink);border-radius:999px;background:var(--paper);color:var(--ink);font:800 14px var(--f-body);cursor:pointer}
+.ibtn[aria-pressed="true"]{background:var(--hi);color:var(--hi-ink)}
+.apanel{position:fixed;top:calc(env(safe-area-inset-top,0px) + 50px);right:max(12px,env(safe-area-inset-right,0px));z-index:20;width:min(320px,calc(100vw - 24px));background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);padding:12px}
+.apanel .aprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.apanel .apvol{margin-top:10px}
+.apanel .apchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.apanel .apchips .chip{font-family:var(--f-body);font-size:13px}
+.apanel p{font-size:12.5px;margin:10px 0 0}
 .pw{white-space:nowrap}
 .pw sup{font-size:.62em;vertical-align:super;line-height:0;margin-left:1px}
 sup{line-height:0}
@@ -571,8 +590,9 @@ sup{line-height:0}
 .facts{margin:6px 0 0;padding-left:20px}
 
 </style>
+<script>try{var __u=JSON.parse(localStorage.getItem('smp-ui'));document.documentElement.setAttribute('data-theme',(__u&&__u.theme)||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
 <header class="top"><div class="in">
-  <div class="brandrow"><a class="brand" href="#beranda"><b>Bab 1</b><span>Seri Matematika SMP/MTs</span></a></div>
+  <div class="brandrow"><a class="brand" href="#beranda"><span>Seri Matematika SMP/MTs</span></a></div>
   <nav aria-label="Menu utama">
     <a href="#beranda">Beranda</a><a href="#materi">Bab 1</a><a href="#bab2">Bab 2</a><a href="#sd">Materi SD</a><a href="#challenge">Challenge</a><a href="#uraian">Uraian</a><a href="#latihan">Latihan</a>
   </nav>
@@ -2065,7 +2085,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   /* ---------- Materi SD: Penjumlahan (urutan mengikuti 8 halaman buku) ---------- */
   const SDT = ['Peta Penjumlahan', 'Mengenal Bilangan', 'Hasil 1–10', 'Contoh 9+', 'Hasil 11–19', 'Susun ke Bawah', 'Dua Digit', 'Tiga Digit', 'Empat Digit'];
   const SDN = [
-    'Penjumlahan dibagi menjadi dua kelompok. Kelompok A hasilnya lebih dari sepuluh, yaitu sembilan tambah, delapan tambah, tujuh tambah, dan enam tambah. Hasilnya sebelas sampai sembilan belas. Ini level mahir. Kelompok B hasilnya sepuluh atau kurang, yaitu satu sampai sepuluh. Ini level dasar. Kita mulai dari level dasar, dengan mengenal bilangan.',
+    'Penjumlahan dibagi menjadi dua kelompok. Kelompok A hasilnya sepuluh atau kurang, yaitu satu sampai sepuluh. Ini level dasar. Kelompok B hasilnya lebih dari sepuluh, yaitu sembilan tambah, delapan tambah, tujuh tambah, dan enam tambah. Hasilnya sebelas sampai sembilan belas. Ini level mahir. Kita mulai dari level dasar, dengan mengenal bilangan.',
     'Mengenal bilangan. Satu bintang melambangkan bilangan satu. Dua bintang melambangkan bilangan dua. Tiga bintang, bilangan tiga. Empat bintang, bilangan empat. Lima bintang, bilangan lima. Ketuk satu baris untuk mendengar nama bilangannya. Setelah itu, coba latihan menghitung benda di bawahnya.',
     'Penjumlahan yang hasilnya satu sampai sepuluh. Satu sama dengan satu tambah nol. Dua sama dengan satu tambah satu. Kalau ditunjukkan dengan jari, dua jari sama dengan satu jari ditambah satu jari. Tiga sama dengan dua tambah satu. Empat sama dengan tiga tambah satu, atau dua tambah dua. Lima sama dengan empat tambah satu, atau tiga tambah dua. Enam sama dengan lima tambah satu, empat tambah dua, atau tiga tambah tiga. Tujuh, delapan, dan sembilan juga punya pasangan sendiri, lihat di layar. Sepuluh punya lima pasangan. Sembilan dan satu, huruf S. Delapan dan dua, huruf D. Tujuh dan tiga, huruf T. Enam dan empat, huruf E. Lima dan lima, huruf L. Huruf depan kedua bilangan selalu sama.',
     'Contoh sembilan tambah. Sembilan titik hanya kurang satu untuk menjadi sepuluh. Jadi ambil satu titik dari bilangan yang ditambahkan, lalu pindahkan ke sembilan titik itu. Sekarang ada sepuluh titik, diwakili satu kotak. Contohnya sembilan tambah lima. Ambil satu dari lima, sisa empat. Sepuluh tambah empat sama dengan empat belas. Dengan cara yang sama, sembilan tambah delapan sama dengan tujuh belas, dan sembilan tambah sembilan sama dengan delapan belas. Triknya, bilangan kedua dikurangi satu, lalu ditambahkan ke sepuluh.',
@@ -2096,14 +2116,14 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   /* ----- 1. Peta penjumlahan ----- */
   function sdStairs(items, topIdx) {
     return '<div class="sd-stairs" role="img" aria-label="Tangga: ' + items.join(', ') + '">' +
-      items.map((t, i) => '<span class="sd-st' + (i === topIdx ? ' t' : '') + '" style="min-height:' + (34 + i * 26) + 'px">' + t + '</span>').join('') + '</div>';
+      items.map((t, i) => '<span class="sd-st' + (i === topIdx ? ' t' : '') + '" style="min-height:' + (17 + i * 13) + 'px">' + t + '</span>').join('') + '</div>';
   }
   function sdPeta(c) {
     c.innerHTML = '<div class="card"><h3>A. Penjumlahan</h3><p>Semua penjumlahan dibagi dua kelompok menurut hasilnya.</p><div class="sd-two">' +
-      '<div class="sd-grp"><span class="sd-badge">A</span><h4>Hasilnya &gt; 10</h4>' + sdStairs(['9+', '8+', '7+', '6+'], -1) +
-      '<p style="margin:0">Hasil penjumlahan sama dengan <b>11 – 19</b>.</p><p style="margin:8px 0 0"><span class="sd-lv">Mahir</span></p></div>' +
-      '<div class="sd-grp"><span class="sd-badge">B</span><h4>Hasilnya ≤ 10</h4>' + sdStairs(['1 – 5', '6', '7', '8', '9', '10'], 5) +
-      '<p style="margin:0">Hasil penjumlahannya sama dengan <b>1 sampai 10</b>.</p><p style="margin:8px 0 0"><span class="sd-lv">Dasar</span></p></div></div>' +
+      '<div class="sd-grp"><span class="sd-badge">A</span><h4>Hasilnya ≤ 10</h4>' + sdStairs(['1 – 5', '6', '7', '8', '9', '10'], 5) +
+      '<p style="margin:0">Hasil penjumlahannya sama dengan <b>1 sampai 10</b>.</p><p style="margin:4px 0 0"><span class="sd-lv">Dasar</span></p></div>' +
+      '<div class="sd-grp"><span class="sd-badge">B</span><h4>Hasilnya &gt; 10</h4>' + sdStairs(['9+', '8+', '7+', '6+'], -1) +
+      '<p style="margin:0">Hasil penjumlahan sama dengan <b>11 – 19</b>.</p><p style="margin:4px 0 0"><span class="sd-lv">Mahir</span></p></div></div>' +
       '<div class="sd-note">Mulai dari level dasar: kenal bilangan.</div></div>' +
       '<div class="card"><h3>Masuk kelompok mana?</h3><p class="muted" style="margin:0 0 8px">Isi dua bilangan 1 sampai 9.</p>' +
       '<div class="ins"><label class="ni"><span>Bilangan 1</span><input class="field num" id="pka" type="text" inputmode="numeric" maxlength="1" value="9"></label><span class="big" aria-hidden="true" style="padding-bottom:10px">+</span>' +
@@ -2113,7 +2133,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       const a = parseInt($('#pka').value, 10), b = parseInt($('#pkb').value, 10), r = $('#pkr');
       if (!(a >= 1 && a <= 9 && b >= 1 && b <= 9)) { r.textContent = 'Isi dua bilangan 1 sampai 9.'; return; }
       const s = a + b;
-      r.textContent = a + ' + ' + b + ' = ' + s + '. ' + (s > 10 ? 'Hasilnya lebih dari 10, jadi masuk kelompok A (mahir, hasil 11 – 19).' : 'Hasilnya 10 atau kurang, jadi masuk kelompok B (dasar, hasil 1 – 10).');
+      r.textContent = a + ' + ' + b + ' = ' + s + '. ' + (s > 10 ? 'Hasilnya lebih dari 10, jadi masuk kelompok B (mahir, hasil 11 – 19).' : 'Hasilnya 10 atau kurang, jadi masuk kelompok A (dasar, hasil 1 – 10).');
     };
     $('#pka').addEventListener('input', upd); $('#pkb').addEventListener('input', upd); upd();
   }
@@ -3209,10 +3229,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   function renderHome() {
     const solved = Object.keys(store.uraian).length;
     view.innerHTML =
-      '<section class="hero"><div class="bubble"><span class="bab">BAB<br>1</span><h1>Bilangan</h1></div>' +
-      '<p class="lead">Belajar bilangan bulat, empat operasi hitung, sifat-sifat operasinya, dan urutan mengerjakan operasi campuran. Semua contoh bisa kamu ubah sendiri angkanya.</p>' +
-      nlSVG({ min: -5, max: 5, zones: true, zoneLabels: true, marks: [{ v: -3, cls: 'neg', label: vv(-3) }, { v: 0, cls: 'zero', label: '0' }, { v: 2, cls: 'pos', label: '2' }], label: 'Garis bilangan dari −5 sampai 5' }) +
-      '</section><div class="menu">' +
+      '<div class="menu">' +
       '<a class="mcard" href="#materi"><h3>Bab 1</h3><p>Garis bilangan, empat operasi, tiga sifat, dan operasi campuran.</p><span class="st">4 bagian</span></a>' +
       '<a class="mcard" href="#bab2"><h3>Bab 2: Bilangan Berpangkat</h3><p>Perkalian, pembagian, pemangkatan, akar, dan kuadrat cepat, lengkap dengan soal dari buku.</p><span class="st">8 bagian</span></a>' +
       '<a class="mcard" href="#sd"><h3>Materi SD</h3><p>Penjumlahan, pengurangan, perkalian (dan triknya), pembagian, dan pecahan, dengan gambar dan audio penjelasan.</p><span class="st">' + (store.sd && store.sd.total ? store.sd.ok + ' benar dari ' + store.sd.total : 'Penjumlahan 9 bagian, pengurangan 4 bagian, perkalian 7 bagian, pembagian 3 bagian, pecahan 6 bagian') + '</span></a>' +
@@ -3587,4 +3604,245 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
 })();
 </script>
 
+<script>
+/* ===== Mode terang/gelap dan suara latar (dibuat dengan Web Audio, tanpa berkas audio) ===== */
+(function () {
+  var KEY = 'smp-ui', st = { theme: 'light', vol: 0.5, on: { music: true, bird: true, wave: true, nature: true } };
+  try {
+    var j = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (j) {
+      if (j.theme === 'light' || j.theme === 'dark') st.theme = j.theme;
+      if (typeof j.vol === 'number') st.vol = Math.max(0, Math.min(1, j.vol));
+      if (j.on) Object.keys(st.on).forEach(function (k) { if (typeof j.on[k] === 'boolean') st.on[k] = j.on[k]; });
+    }
+  } catch (e) { /* abaikan */ }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* abaikan */ } }
+
+  var host = document.querySelector('.top .in'); if (!host) return;
+  var ctl = document.createElement('div'); ctl.className = 'ctl';
+  ctl.innerHTML = '<button type="button" class="ibtn" id="btheme"></button><button type="button" class="ibtn" id="bsound" aria-pressed="false" aria-expanded="false" aria-controls="apanel" aria-label="Suara latar" title="Suara latar">♪<span class="hide-s">Suara</span></button>';
+  host.appendChild(ctl);
+  var btnTheme = document.getElementById('btheme'), btnSound = document.getElementById('bsound');
+
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', st.theme);
+    var light = st.theme === 'light';
+    btnTheme.textContent = light ? '☾' : '☀';
+    btnTheme.setAttribute('aria-label', light ? 'Ganti ke mode gelap' : 'Ganti ke mode terang');
+    btnTheme.title = light ? 'Mode gelap' : 'Mode terang';
+  }
+  btnTheme.addEventListener('click', function () { st.theme = st.theme === 'light' ? 'dark' : 'light'; applyTheme(); save(); });
+  applyTheme();
+
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var LAB = { music: 'Musik', bird: 'Burung', wave: 'Ombak', nature: 'Alam' };
+  var panel = document.createElement('div'); panel.className = 'apanel'; panel.id = 'apanel'; panel.hidden = true;
+  panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Suara latar');
+  panel.innerHTML = '<div class="aprow"><b>Suara latar</b><button type="button" class="btn" id="aplay">Putar</button></div>' +
+    '<label class="sl apvol"><span>Volume</span><input type="range" id="avol" min="0" max="100" step="1"><output id="avo" class="eq"></output></label>' +
+    '<div class="apchips" role="group" aria-label="Pilih suara">' + Object.keys(LAB).map(function (k) { return '<button type="button" class="chip" data-k="' + k + '" aria-pressed="' + st.on[k] + '">' + LAB[k] + '</button>'; }).join('') + '</div>' +
+    '<p class="muted">' + (AC ? 'Musik instrumen lembut, kicau burung, deru ombak, serta angin dan jangkrik. Semua dibuat langsung di perangkatmu.' : 'Browser ini belum mendukung suara latar.') + '</p>';
+  document.body.appendChild(panel);
+  var playBtn = document.getElementById('aplay'), vol = document.getElementById('avol'), vo = document.getElementById('avo');
+  vol.value = Math.round(st.vol * 100); vo.textContent = vol.value;
+  if (!AC) { playBtn.disabled = true; vol.disabled = true; }
+
+  function openPanel(o) { panel.hidden = !o; btnSound.setAttribute('aria-expanded', String(o)); }
+  btnSound.addEventListener('click', function (e) { e.stopPropagation(); openPanel(panel.hidden); });
+  panel.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', function () { if (!panel.hidden) openPanel(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { openPanel(false); btnSound.focus(); } });
+
+  /* ---- mesin suara ---- */
+  var ctx = null, master, rev, bus = {}, noiseBuf, timers = [], running = false;
+  var rnd = Math.random;
+  function mkNoise() {
+    var len = Math.floor(ctx.sampleRate * 4), b = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var c = 0; c < 2; c++) {
+      var d = b.getChannelData(c), last = 0;
+      for (var i = 0; i < len; i++) { last = (last + 0.02 * (rnd() * 2 - 1)) / 1.02; d[i] = last * 3.5; }
+      var fade = 2000; /* sambungan ujung-ke-awal dilunakkan supaya ulangan tidak berklik */
+      for (var k = 0; k < fade; k++) { var w = k / fade; d[k] *= w; d[len - 1 - k] *= w; }
+    }
+    return b;
+  }
+  function mkImpulse(sec, decay) {
+    var len = Math.floor(ctx.sampleRate * sec), b = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var c = 0; c < 2; c++) { var d = b.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (rnd() * 2 - 1) * Math.pow(1 - i / len, decay); }
+    return b;
+  }
+  function loopNoise() { var s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true; return s; }
+  function lfoTo(param, freq, depth) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = freq; g.gain.value = depth;
+    o.connect(g); g.connect(param); o.start(); return o;
+  }
+
+  function init() {
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = st.vol;
+    var comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
+    rev = ctx.createConvolver(); rev.buffer = mkImpulse(2.6, 2.4);
+    var rg = ctx.createGain(); rg.gain.value = 0.5; rev.connect(rg); rg.connect(master);
+    Object.keys(LAB).forEach(function (k) {
+      var g = ctx.createGain(); g.gain.value = st.on[k] ? 1 : 0; g.connect(master); bus[k] = g;
+    });
+    bus.music.connect(rev); bus.bird.connect(rev);
+    noiseBuf = mkNoise();
+    startWaves(); startWind();
+    timers.push(setInterval(tick, 250));
+  }
+
+  function startWaves() {
+    /* dua lapisan deru ombak dengan periode berbeda supaya terdengar alami */
+    [[0.10, 600, 380], [0.067, 420, 260]].forEach(function (p, i) {
+      var src = loopNoise(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+      lp.type = 'lowpass'; lp.frequency.value = p[1]; lp.Q.value = 0.6; g.gain.value = 0.9;
+      lfoTo(g.gain, p[0], 0.65); lfoTo(lp.frequency, p[0], p[2]);
+      src.connect(lp); lp.connect(g); g.connect(bus.wave);
+      src.start(0, i * 1.3);
+    });
+  }
+  function startWind() {
+    var src = loopNoise(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    bp.type = 'bandpass'; bp.frequency.value = 650; bp.Q.value = 0.7; g.gain.value = 0.38;
+    lfoTo(bp.frequency, 0.05, 280); lfoTo(g.gain, 0.08, 0.2);
+    src.connect(bp); bp.connect(g); g.connect(bus.nature); src.start(0, 2.1);
+  }
+
+  /* kicau burung */
+  function birdCall(t) {
+    var pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    if (pan) pan.value = rnd() * 1.6 - 0.8;
+    var out = ctx.createGain(); out.connect(pan || bus.bird); if (pan) pan.connect(bus.bird);
+    var base = 2200 + rnd() * 2400, n = 2 + Math.floor(rnd() * 4), type = Math.floor(rnd() * 3), at = t;
+    for (var i = 0; i < n; i++) {
+      var dur = 0.07 + rnd() * 0.07, f0 = type === 0 ? base : type === 1 ? base * (1 + (i % 2) * 0.25) : base * (1 + i * 0.06);
+      var f1 = type === 0 ? f0 * 1.35 : type === 1 ? f0 * 0.8 : f0 * 1.2;
+      var o = ctx.createOscillator(), e = ctx.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(f0, at); o.frequency.exponentialRampToValueAtTime(f1, at + dur);
+      e.gain.setValueAtTime(0.0001, at); e.gain.exponentialRampToValueAtTime(0.09, at + 0.012); e.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      o.connect(e); e.connect(out); o.start(at); o.stop(at + dur + 0.05);
+      at += dur + 0.04 + rnd() * 0.06;
+    }
+  }
+  /* jangkrik */
+  function cricket(t) {
+    var f = 4200 + rnd() * 1000;
+    for (var i = 0; i < 3; i++) {
+      var at = t + i * 0.065, o = ctx.createOscillator(), e = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      e.gain.setValueAtTime(0.0001, at); e.gain.exponentialRampToValueAtTime(0.03, at + 0.01); e.gain.exponentialRampToValueAtTime(0.0001, at + 0.04);
+      o.connect(e); e.connect(bus.nature); o.start(at); o.stop(at + 0.06);
+    }
+  }
+
+  /* musik: kalimba lembut, tangga nada pentatonik, kord C - Am - F - G */
+  var C4 = 261.63, CHORDS = [[0, 4, 7], [-3, 0, 4], [-7, -3, 0], [-5, -1, 2]], PENT = [0, 2, 4, 7, 9, 12, 14, 16, 19];
+  function fr(semi) { return C4 * Math.pow(2, semi / 12); }
+  function pluck(t, f, vel) {
+    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain();
+    o.type = 'triangle'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2; g2.gain.value = 0.25;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vel, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(bus.music);
+    o.start(t); o2.start(t); o.stop(t + 1.9); o2.stop(t + 1.9);
+  }
+  function pad(t, ch) {
+    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 800; lp.connect(bus.music);
+    ch.forEach(function (semi) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = fr(semi - 12);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 1.4); g.gain.exponentialRampToValueAtTime(0.0001, t + 5.6);
+      o.connect(g); g.connect(lp); o.start(t); o.stop(t + 5.8);
+    });
+  }
+  var STEP = 0.6, nextStep = 0, stepIdx = 0, nextBird = 0, nextCr = 0, lastNote = 7;
+  function scheduleStep(t, idx) {
+    var ch = CHORDS[Math.floor(idx / 8) % CHORDS.length];
+    if (idx % 8 === 0) pad(t, ch);
+    if (idx % 4 === 0 && rnd() < 0.9) pluck(t, fr(ch[0] - 12), 0.11);
+    if (rnd() < 0.58) {
+      var semi = rnd() < 0.7 ? ch[Math.floor(rnd() * 3)] + (rnd() < 0.5 ? 12 : 0) : PENT[Math.floor(rnd() * PENT.length)];
+      if (Math.abs(semi - lastNote) > 12) semi -= 12 * Math.sign(semi - lastNote);
+      lastNote = semi; pluck(t, fr(semi), 0.08 + rnd() * 0.05);
+    }
+  }
+  function tick() {
+    if (!ctx || ctx.state !== 'running') return;
+    var now = ctx.currentTime;
+    while (nextStep < now + 0.8) { if (st.on.music) scheduleStep(Math.max(nextStep, now), stepIdx); nextStep += STEP; stepIdx++; }
+    if (now >= nextBird) { if (st.on.bird) birdCall(now + 0.05); nextBird = now + 1.6 + rnd() * 4.5; }
+    if (now >= nextCr) { if (st.on.nature) cricket(now + 0.05); nextCr = now + 0.9 + rnd() * 0.8; }
+  }
+
+  function paint() {
+    playBtn.textContent = running ? 'Berhenti' : 'Putar';
+    btnSound.setAttribute('aria-pressed', String(running));
+  }
+  function start() {
+    if (!AC) return;
+    if (!ctx) { init(); var n = ctx.currentTime; nextStep = n + 0.2; nextBird = n + 1.5; nextCr = n + 1; }
+    ctx.resume(); running = true; paint();
+  }
+  function stop() { if (ctx) ctx.suspend(); running = false; paint(); }
+  playBtn.addEventListener('click', function () { if (running) stop(); else start(); });
+  vol.addEventListener('input', function () {
+    st.vol = vol.value / 100; vo.textContent = vol.value; save();
+    if (master) master.gain.setTargetAtTime(st.vol, ctx.currentTime, 0.05);
+  });
+  panel.querySelector('.apchips').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-k]'); if (!b) return;
+    var k = b.dataset.k; st.on[k] = !st.on[k]; b.setAttribute('aria-pressed', String(st.on[k])); save();
+    if (bus[k]) bus[k].gain.setTargetAtTime(st.on[k] ? 1 : 0, ctx.currentTime, 0.3);
+    if (!running && st.on[k] && AC) start();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (!ctx || !running) return;
+    if (document.hidden) ctx.suspend(); else ctx.resume();
+  });
+  paint();
+})();
+</script>
+<script>
+/* ===== Layar penuh: tombol, dan otomatis masuk layar penuh pada sentuhan/klik pertama ===== */
+(function () {
+  var ctl = document.querySelector('.ctl'); if (!ctl) return;
+  var de = document.documentElement;
+  var req = de.requestFullscreen || de.webkitRequestFullscreen, exit = document.exitFullscreen || document.webkitExitFullscreen;
+  if (!req || !exit) return; /* mis. iPhone Safari tidak mendukung layar penuh untuk halaman */
+  var KEY = 'smp-fs', auto = true;
+  try { auto = localStorage.getItem(KEY) !== 'off'; } catch (e) { /* abaikan */ }
+  function setAuto(v) { auto = v; try { localStorage.setItem(KEY, v ? 'on' : 'off'); } catch (e) { /* abaikan */ } }
+  function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function enter() { try { var p = req.call(de); if (p && p.catch) p.catch(function () {}); } catch (e) { /* diblokir browser */ } }
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'ibtn'; btn.id = 'bfs'; btn.textContent = '⛶';
+  ctl.insertBefore(btn, ctl.firstChild);
+  function paint() {
+    var on = isFs();
+    btn.setAttribute('aria-pressed', String(on));
+    btn.setAttribute('aria-label', on ? 'Keluar dari layar penuh' : 'Layar penuh');
+    btn.title = on ? 'Keluar dari layar penuh' : 'Layar penuh';
+  }
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (isFs()) { setAuto(false); try { var p = exit.call(document); if (p && p.catch) p.catch(function () {}); } catch (x) { /* abaikan */ } }
+    else { setAuto(true); enter(); }
+  });
+  var wasFs = false;
+  function onChange() { var on = isFs(); if (wasFs && !on) setAuto(false); /* keluar (Esc atau tombol): jangan paksa masuk lagi */ wasFs = on; paint(); }
+  document.addEventListener('fullscreenchange', onChange);
+  document.addEventListener('webkitfullscreenchange', onChange);
+  /* Browser hanya mengizinkan layar penuh setelah ada interaksi pengguna, jadi dicoba saat sentuhan/klik/tombol pertama */
+  var done = false;
+  function first(e) {
+    if (done) return;
+    if (e.type === 'keydown' && (e.key === 'Escape' || e.key === 'Tab')) return;
+    if (!auto || isFs()) { done = true; return; }
+    done = true; enter();
+  }
+  ['click', 'touchend', 'keydown'].forEach(function (t) { document.addEventListener(t, first, true); });
+  if (auto) enter(); /* hanya berhasil kalau browser mengizinkan (mis. aplikasi terpasang) */
+  paint();
+})();
+</script>
 </body></html>
