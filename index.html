@@ -568,6 +568,18 @@ p{margin:.35em 0}
 .apanel .apchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .apanel .apchips .chip{font-family:var(--f-body);font-size:13px}
 .apanel p{font-size:12.5px;margin:10px 0 0}
+/* ===== Bilah atas di HP portrait: baris 1 = judul + tombol, baris 2 = semua menu (membungkus, tanpa perlu digeser) ===== */
+.brand{min-width:0}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brandrow{min-width:0}
+@media (max-width:760px){
+  .top .in{flex-wrap:wrap;gap:0 8px}
+  .brandrow{flex:1 1 0;order:1;padding-top:6px}
+  .ctl{order:2;padding-top:6px}
+  .top nav{order:3;flex:1 1 100%;flex-wrap:wrap;overflow:visible;gap:3px 2px;padding:4px 0 6px}
+  .top nav a{padding:4px 10px;font-size:13px}
+  .apanel{top:calc(env(safe-area-inset-top,0px) + 46px)}
+}
 .pw{white-space:nowrap}
 .pw sup{font-size:.62em;vertical-align:super;line-height:0;margin-left:1px}
 sup{line-height:0}
@@ -3613,10 +3625,10 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
     if (j) {
       if (j.theme === 'light' || j.theme === 'dark') st.theme = j.theme;
       if (typeof j.vol === 'number') st.vol = Math.max(0, Math.min(1, j.vol));
-      if (j.on) Object.keys(st.on).forEach(function (k) { if (typeof j.on[k] === 'boolean') st.on[k] = j.on[k]; });
     }
   } catch (e) { /* abaikan */ }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* abaikan */ } }
+  st.on = { music: true, bird: true, wave: true, nature: true }; /* semua suara menyatu, tidak ada pilihan terpisah */
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ theme: st.theme, vol: st.vol })); } catch (e) { /* abaikan */ } }
 
   var host = document.querySelector('.top .in'); if (!host) return;
   var ctl = document.createElement('div'); ctl.className = 'ctl';
@@ -3640,8 +3652,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Suara latar');
   panel.innerHTML = '<div class="aprow"><b>Suara latar</b><button type="button" class="btn" id="aplay">Putar</button></div>' +
     '<label class="sl apvol"><span>Volume</span><input type="range" id="avol" min="0" max="100" step="1"><output id="avo" class="eq"></output></label>' +
-    '<div class="apchips" role="group" aria-label="Pilih suara">' + Object.keys(LAB).map(function (k) { return '<button type="button" class="chip" data-k="' + k + '" aria-pressed="' + st.on[k] + '">' + LAB[k] + '</button>'; }).join('') + '</div>' +
-    '<p class="muted">' + (AC ? 'Musik instrumen lembut, kicau burung, deru ombak, serta angin dan jangkrik. Semua dibuat langsung di perangkatmu.' : 'Browser ini belum mendukung suara latar.') + '</p>';
+    '<p class="muted">' + (AC ? 'Satu paduan suara: musik instrumen lembut, kicau burung, deru ombak, angin, dan jangkrik. Dibuat langsung di perangkatmu.' : 'Browser ini belum mendukung suara latar.') + '</p>';
   document.body.appendChild(panel);
   var playBtn = document.getElementById('aplay'), vol = document.getElementById('avol'), vo = document.getElementById('avo');
   vol.value = Math.round(st.vol * 100); vo.textContent = vol.value;
@@ -3788,12 +3799,6 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   vol.addEventListener('input', function () {
     st.vol = vol.value / 100; vo.textContent = vol.value; save();
     if (master) master.gain.setTargetAtTime(st.vol, ctx.currentTime, 0.05);
-  });
-  panel.querySelector('.apchips').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-k]'); if (!b) return;
-    var k = b.dataset.k; st.on[k] = !st.on[k]; b.setAttribute('aria-pressed', String(st.on[k])); save();
-    if (bus[k]) bus[k].gain.setTargetAtTime(st.on[k] ? 1 : 0, ctx.currentTime, 0.3);
-    if (!running && st.on[k] && AC) start();
   });
   document.addEventListener('visibilitychange', function () {
     if (!ctx || !running) return;
