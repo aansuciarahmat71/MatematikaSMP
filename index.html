@@ -2807,6 +2807,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       cur.forEach((v, i) => { q('#pf' + i).value = v; });
       if (r.err) { q('#cerr').textContent = r.err; return; }
       sol = r.sol; q('#cerr').textContent = '';
+      if (cfg.onChange) cfg.onChange(cur);
       q('#cout').innerHTML = pwRender(sol, st);
       q('#cmu').disabled = st === 0; q('#cma').textContent = st >= sol.steps.length ? 'Ulangi' : 'Lanjut';
     }
@@ -2849,8 +2850,19 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   }
 
   function pwOp(c, kind, rk, title, desc, fields, ex, rule) {
-    c.innerHTML = rulesBox(rule) + '<div id="fcalc"></div><div id="sdpr"></div>';
-    const h = pwCard($('#fcalc'), { kind: kind, rk: rk, title: title, desc: desc, fields: fields, ex: ex });
+    const sq = kind === 'q5' || kind === 'q50';
+    c.innerHTML = rulesBox(rule) + '<div id="fcalc"></div>' +
+      (sq ? '<div class="card cmp"><h3 class="cmptitle">Cara kotak nilai tempat</h3><p class="muted cmpdesc" style="display:block">Kuadrat berarti bilangan dikali dirinya sendiri, jadi bisa dihitung dengan kotak nilai tempat, sama seperti perkalian 2 digit × 2 digit.</p><div id="sqplayer" style="margin-top:6px"></div></div>' : '') +
+      '<div id="sdpr"></div>';
+    let pl = null, last = null;
+    const onChange = sq ? (cur) => {
+      const n = parseInt(cur[0], 10);
+      if (!(n > 0) || n === last) return;
+      last = n;
+      if (!pl) pl = makePlayer($('#sqplayer'), { lesson: gLesson });
+      pl.set(n, n);
+    } : null;
+    const h = pwCard($('#fcalc'), { kind: kind, rk: rk, title: title, desc: desc, fields: fields, ex: ex, onChange: onChange });
     sdPractice($('#sdpr'), rk, h.show);
   }
 
