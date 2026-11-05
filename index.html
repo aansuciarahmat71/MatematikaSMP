@@ -429,6 +429,7 @@ main.in{padding-block:12px 48px}
 .sd-list div b{color:var(--neg)}
 .sd-run{border-collapse:collapse;font-family:var(--f-mono);font-size:clamp(20px,6vw,28px);font-weight:700;margin:6px auto}
 .sd-run td{padding:1px 10px;text-align:right}
+.sd-run .pm{text-align:left;padding:1px 0 1px 2px;font-weight:700;color:var(--ink)}
 .sd-run .sb{font-size:.6em;color:var(--x);text-align:left;font-weight:600}
 .sd-run .ln td{border-top:3px solid var(--ink)}
 .sd-run .rs td{color:var(--neg)}
@@ -539,6 +540,15 @@ p{margin:.35em 0}
 @media (max-width:560px){.hide-s{display:none}.mcard p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 
 /* ===== Bab 2: bilangan berpangkat ===== */
+/* ===== Warna bertingkat: menu atas (kuning), submenu (biru), bagian materi (hijau), pilihan dalam kartu (oranye) ===== */
+#sdsub .chip{border-color:var(--qb);color:var(--qb)}
+#sdsub .chip[aria-pressed="true"]{background:var(--qb);border-color:var(--qb);color:var(--paper)}
+#sdtabs .chip,#pwtabs .chip,#mtabs .chip{border-color:var(--pos);color:var(--ink)}
+#sdtabs .chip[aria-pressed="true"],#pwtabs .chip[aria-pressed="true"],#mtabs .chip[aria-pressed="true"]{background:var(--pos);border-color:var(--pos);color:var(--paper)}
+#tkchips .chip,#opchips .chip,#bkset .chip{border-color:var(--x);color:var(--ink)}
+#tkchips .chip[aria-pressed="true"],#opchips .chip[aria-pressed="true"],#bkset .chip[aria-pressed="true"]{background:var(--x);border-color:var(--x);color:var(--paper)}
+#sdsub{padding-bottom:8px}
+#sdtabs,#pwtabs,#mtabs{padding-bottom:8px}
 .pw{white-space:nowrap}
 .pw sup{font-size:.62em;vertical-align:super;line-height:0;margin-left:1px}
 sup{line-height:0}
@@ -3018,7 +3028,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       const list = sds.list, G = sdCara(list), n = list.length, k = Math.min(sds.k, n), done = k >= n, S = G.steps;
       const rows = list.map((d, i) => {
         const s = S[i], hit = i < k && s.strike;
-        return '<tr' + (k > 0 && i === k - 1 ? ' class="cur"' : '') + '><td>' + (hit ? '<s>' + d + '</s>' : d) + (i === n - 1 ? ' +' : '') + '</td><td class="sb">' + (hit ? s.rem : '') + '</td></tr>';
+        return '<tr' + (k > 0 && i === k - 1 ? ' class="cur"' : '') + '><td>' + (hit ? '<s>' + d + '</s>' : d) + '</td><td class="pm">' + (i === n - 1 ? '+' : '') + '</td><td class="sb">' + (hit ? s.rem : '') + '</td></tr>';
       }).join('');
       let txt;
       if (k === 0) txt = 'Tekan Lanjut. Jumlahkan dari atas, coret angka kalau jumlahnya 10 atau lebih.';
@@ -3029,7 +3039,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       host.innerHTML = '<div class="card pop"><h3>Penjumlahan 1 digit</h3><p class="muted" style="margin:4px 0 8px">Jumlahkan dari atas. Kalau jumlahnya <b>10 atau lebih</b>, coret angka itu dan tulis sisanya di samping, lalu lanjutkan dari sisa itu. Banyak coretan = banyak puluhan.</p>' +
         '<div class="chips" id="oex">' + EX.map((l, i) => '<button type="button" class="chip sm" data-l="' + i + '">' + l.join(' ') + '</button>').join('') + '<button type="button" class="chip sm" data-l="rand">Acak</button></div>' +
         '<p style="margin:10px 0 0;text-align:center"><span class="sd-lv">× ≥ 10</span></p>' +
-        '<table class="sd-run" aria-label="Penjumlahan satu digit ke bawah">' + rows + '<tr class="ln rs"><td>' + (done ? G.total : '?') + '</td><td></td></tr></table>' +
+        '<table class="sd-run" aria-label="Penjumlahan satu digit ke bawah">' + rows + '<tr class="ln rs"><td>' + (done ? G.total : '?') + '</td><td></td><td></td></tr></table>' +
         '<p class="muted" style="margin:0;text-align:center">Banyak coretan: <b>' + (k > 0 ? S[k - 1].tens : 0) + '</b></p>' +
         '<div class="row" style="justify-content:center"><button type="button" class="btn ghost" id="omu"' + (k === 0 ? ' disabled' : '') + '>Mundur</button><button type="button" class="btn" id="oma">' + (done ? 'Ulangi' : 'Lanjut') + '</button></div>' +
         '<p class="spline" style="margin-top:10px" aria-live="polite">' + txt + '</p></div>';
