@@ -726,7 +726,7 @@ sup{line-height:0}
 <header class="top"><div class="in">
   <div class="brandrow"><a class="brand" href="#beranda"><span>Seri Matematika SMP/MTs</span></a></div>
   <nav aria-label="Menu utama">
-    <a href="#beranda">Beranda</a><a href="#materi">Bab 1</a><a href="#bab2">Bab 2</a><a href="#bab3">Bab 3</a><a href="#bab4">Bab 4</a><a href="#tka">TKA</a><a href="#tka2025">TKA 2025</a><a href="#tryout1">Try Out 1</a><a href="#sd">Materi SD</a><a href="#challenge">Challenge</a><a href="#uraian">Uraian</a><a href="#latihan">Latihan</a>
+    <a href="#beranda">Beranda</a><a href="#materi">Bab 1</a><a href="#bab2">Bab 2</a><a href="#bab3">Bab 3</a><a href="#bab4">Bab 4</a><a href="#bab5">Bab 5</a><a href="#bab6">Bab 6</a><a href="#tka">TKA</a><a href="#tka2025">TKA 2025</a><a href="#tryout1">Try Out 1</a><a href="#sd">Materi SD</a><a href="#challenge">Challenge</a><a href="#uraian">Uraian</a><a href="#latihan">Latihan</a>
   </nav>
 </div></header>
 <main class="in" id="view"></main>
@@ -4876,6 +4876,355 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
     if (scroll) window.scrollTo(0, 0);
   }
 
+  /* ===== BAB 5 BEGIN ===== */
+  const pyTrip = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25]];
+  const pyRoot = (n) => { const s = akSimp(n); return s.m === 1 ? String(s.k) : (s.k === 1 ? '√[' + n + ']' : s.k + '√[' + s.m + ']'); };
+  const pyDec = (n) => String(Math.round(Math.sqrt(n) * 100) / 100).replace('.', ',');
+  const pyInt = (v) => Math.max(1, Math.min(999, Math.round(+v) || 1));
+  const pyMin = (n) => String(n).replace('-', '−');
+  function pySolve(kind, x, y) {
+    if (kind === 0) {
+      const S = x * x + y * y, s = akSimp(S);
+      return { S: S, ans: pyRoot(S), lines: ['Rumus: c^[2] = a^[2] + b^[2], dengan c adalah sisi miring.', 'c^[2] = ' + x + '^[2] + ' + y + '^[2] = ' + (x * x) + ' + ' + (y * y) + ' = ' + S, 'c = √[' + S + ']', akSimpText(S, s), 'Jadi sisi miringnya c = ' + pyRoot(S) + (s.m === 1 ? '.' : ' (sekitar ' + pyDec(S) + ').')] };
+    }
+    if (x <= y) return { err: 'Sisi miring harus lebih panjang daripada sisi siku-siku.' };
+    const S = x * x - y * y, s = akSimp(S);
+    return { S: S, ans: pyRoot(S), lines: ['Sisi miring c = ' + x + ' dan satu sisi siku-siku a = ' + y + '. Dari c^[2] = a^[2] + b^[2] diperoleh b^[2] = c^[2] − a^[2].', 'b^[2] = ' + x + '^[2] − ' + y + '^[2] = ' + (x * x) + ' − ' + (y * y) + ' = ' + S, 'b = √[' + S + ']', akSimpText(S, s), 'Jadi sisi siku-siku lainnya b = ' + pyRoot(S) + (s.m === 1 ? '.' : ' (sekitar ' + pyDec(S) + ').')] };
+  }
+  function pyKind(v) {
+    const t = v.slice().sort((p, q) => p - q), x = t[0], y = t[1], z = t[2];
+    if (x + y <= z) return { kind: 'Bukan segitiga', lines: ['Urutkan sisinya: ' + t.join(', ') + '. Sisi terpanjang = ' + z + '.', 'Syarat segitiga: jumlah dua sisi terpendek harus lebih dari sisi terpanjang.', x + ' + ' + y + ' = ' + (x + y) + ', tidak lebih dari ' + z + '.', 'Jadi ketiga panjang ini tidak dapat membentuk segitiga.'] };
+    const A = x * x + y * y, B = z * z, kind = A === B ? 'Siku-siku' : A > B ? 'Lancip' : 'Tumpul';
+    return { kind: kind, lines: ['Urutkan sisinya: ' + t.join(', ') + '. Sisi terpanjang = ' + z + '.', 'Jumlah kuadrat dua sisi pendek: ' + x + '^[2] + ' + y + '^[2] = ' + (x * x) + ' + ' + (y * y) + ' = ' + A, 'Kuadrat sisi terpanjang: ' + z + '^[2] = ' + B, A === B ? A + ' = ' + B + ', jadi segitiga siku-siku.' : A > B ? A + ' > ' + B + ', jadi segitiga lancip.' : A + ' < ' + B + ', jadi segitiga tumpul.'] };
+  }
+  function pyViz(a, b) {
+    const W = 300, pad = 14, s = (W - 2 * pad) / Math.max(a + 2 * b, 2 * a + b), L = pad + (W - 2 * pad - (a + 2 * b) * s) / 2, T = pad + (W - 2 * pad - (2 * a + b) * s) / 2;
+    const X = (x) => (L + (x + b) * s).toFixed(1), Y = (y) => (T + (a + b - y) * s).toFixed(1);
+    const poly = (p, f) => '<polygon points="' + p.map((q) => X(q[0]) + ',' + Y(q[1])).join(' ') + '" fill="' + f + '" fill-opacity=".55" stroke="currentColor" stroke-width="1.3"/>';
+    const fs = Math.max(8, Math.min(13, s * Math.min(a, b) * 0.5)), tx = (x, y, t) => '<text x="' + X(x) + '" y="' + Y(y) + '" font-size="' + fs.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle">' + t + '</text>';
+    return '<svg viewBox="0 0 300 300" style="width:100%;max-width:320px;height:auto" font-family="inherit" fill="currentColor" role="img" aria-label="Segitiga siku-siku dengan persegi pada ketiga sisinya">' +
+      poly([[0, 0], [a, 0], [a, -a], [0, -a]], '#93c5fd') + poly([[0, 0], [0, b], [-b, b], [-b, 0]], '#86efac') + poly([[a, 0], [a + b, a], [b, a + b], [0, b]], '#fcd34d') + poly([[0, 0], [a, 0], [0, b]], '#cbd5e1') +
+      tx(a / 2, -a / 2, 'a² = ' + a * a) + tx(-b / 2, b / 2, 'b² = ' + b * b) + tx((a + b) / 2, (a + b) / 2, 'c² = ' + (a * a + b * b)) + tx(a / 2, 0.45 * Math.min(a, b) / 2 + 0.2, 'a') + tx(0.5 * Math.min(a, b) / 2 + 0.2, b / 2, 'b') + '</svg>';
+  }
+  const pyShow = (host, lines) => { host.innerHTML = '<div class="card cmin-open"><h3 style="margin:0 0 6px">Cara mengerjakan</h3><ol style="margin:0;padding-left:20px">' + lines.map((l) => '<li style="margin:4px 0">' + akFmt(l) + '</li>').join('') + '</ol></div>'; host.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+  function pyQuiz(c, gen) {
+    c.insertAdjacentHTML('beforeend', '<div id="pyq"></div><div id="pys"></div>');
+    const s = c.querySelector('#pys');
+    akQuiz(c.querySelector('#pyq'), (vals) => pyShow(s, vals), gen);
+    c.querySelector('#pyq').addEventListener('click', (e) => { if (e.target.id === 'aknext') s.innerHTML = ''; });
+  }
+  const pyOpts = (ans, cands, fb) => akUniq(ans, cands.map(String), fb);
+  function pyQ1() {
+    const t = akInt(0, 2);
+    if (t === 0) return akQ('Pada segitiga siku-siku dengan sisi siku-siku a dan b serta sisi miring c, hubungan yang benar adalah …', ['Teorema Pythagoras: kuadrat sisi miring sama dengan jumlah kuadrat kedua sisi siku-siku.', 'Jadi c^[2] = a^[2] + b^[2].'], 'c^[2] = a^[2] + b^[2]', ['c = a + b', 'a^[2] = b^[2] + c^[2]', 'c^[2] = a^[2] − b^[2]']);
+    const T = akRnd(pyTrip), a = T[0] * T[0], b = T[1] * T[1], c = T[2] * T[2];
+    if (t === 1) return akQ('Pada segitiga siku-siku, luas persegi pada kedua sisi siku-siku adalah ' + a + ' cm^[2] dan ' + b + ' cm^[2]. Luas persegi pada sisi miring adalah …', ['Luas persegi pada sisi miring = jumlah luas kedua persegi lainnya.', a + ' + ' + b + ' = ' + c + ' cm^[2].'], c + ' cm^[2]', pyOpts(c + ' cm^[2]', [(a + b + a) + ' cm^[2]', T[2] + ' cm^[2]', Math.abs(b - a) + ' cm^[2]'], (i) => (c + i * 3) + ' cm^[2]'));
+    return akQ('Pada segitiga siku-siku, luas persegi pada sisi miring adalah ' + c + ' cm^[2] dan luas persegi pada salah satu sisi siku-siku adalah ' + a + ' cm^[2]. Luas persegi pada sisi siku-siku yang lain adalah …', ['Luas persegi pada sisi miring = jumlah luas dua persegi lainnya.', 'Luas yang dicari = ' + c + ' − ' + a + ' = ' + b + ' cm^[2].'], b + ' cm^[2]', pyOpts(b + ' cm^[2]', [(c + a) + ' cm^[2]', T[1] + ' cm^[2]', c + ' cm^[2]'], (i) => (b + i * 2) + ' cm^[2]'));
+  }
+  function pyQ2() {
+    const T = akRnd(pyTrip), k = T[2] > 20 ? 1 : akInt(1, 3), a = T[0] * k, b = T[1] * k, c = T[2] * k, t = akInt(0, 3);
+    if (t === 0) { const r = pySolve(0, a, b); return akQ('Sisi siku-siku sebuah segitiga siku-siku panjangnya ' + a + ' cm dan ' + b + ' cm. Panjang sisi miringnya adalah …', r.lines, c + ' cm', pyOpts(c + ' cm', [(a + b) + ' cm', (b - a) + ' cm', (c + 1) + ' cm'], (i) => (c + i + 1) + ' cm')); }
+    if (t === 1) { const r = pySolve(1, c, a); return akQ('Sisi miring sebuah segitiga siku-siku panjangnya ' + c + ' cm dan salah satu sisi siku-sikunya ' + a + ' cm. Panjang sisi siku-siku yang lain adalah …', r.lines, b + ' cm', pyOpts(b + ' cm', [(c - a) + ' cm', (c + a) + ' cm', c + ' cm'], (i) => (b + i) + ' cm')); }
+    if (t === 2) { const p = akInt(2, 9), q = akInt(2, 9), r = pySolve(0, p, q), S = p * p + q * q; if (akIsSq(S) || p === q) return pyQ2(); return akQ('Sisi siku-siku sebuah segitiga siku-siku panjangnya ' + p + ' cm dan ' + q + ' cm. Panjang sisi miringnya adalah …', r.lines, r.ans + ' cm', pyOpts(r.ans + ' cm', [(p + q) + ' cm', '√[' + (p + q) + '] cm', '√[' + Math.abs(p * p - q * q) + '] cm', (S) + ' cm'], (i) => '√[' + (S + i * 2) + '] cm').filter((w) => akFmt(w) !== akFmt(r.ans + ' cm'))); }
+    const p = akInt(2, 9), q = akInt(p + 1, 12), r = pySolve(1, q, p), S = q * q - p * p;
+    if (akIsSq(S)) return pyQ2();
+    return akQ('Sisi miring sebuah segitiga siku-siku panjangnya ' + q + ' cm dan salah satu sisi siku-sikunya ' + p + ' cm. Panjang sisi siku-siku yang lain adalah …', r.lines, r.ans + ' cm', pyOpts(r.ans + ' cm', [(q - p) + ' cm', '√[' + (q - p) + '] cm', '√[' + (q * q + p * p) + '] cm', S + ' cm'], (i) => '√[' + (S + i * 2) + '] cm'));
+  }
+  function pyQ3() {
+    const kinds = ['Siku-siku', 'Lancip', 'Tumpul', 'Bukan segitiga'], want = akRnd(kinds); let v = null;
+    if (want === 'Siku-siku') { const T = akRnd(pyTrip), k = T[2] > 20 ? 1 : akInt(1, 3); v = T.map((n) => n * k); }
+    else if (want === 'Bukan segitiga') { const a = akInt(3, 12), b = akInt(3, 12); v = [a, b, a + b + akInt(0, 4)]; }
+    else for (let i = 0; i < 400 && !v; i++) { const t = [akInt(3, 15), akInt(3, 15), akInt(3, 15)]; if (pyKind(t).kind === want) v = t; }
+    v = akShuffle(v); const r = pyKind(v);
+    return akQ('Sebuah segitiga memiliki panjang sisi ' + v[0] + ' cm, ' + v[1] + ' cm, dan ' + v[2] + ' cm. Segitiga tersebut berjenis …', r.lines, r.kind, kinds.filter((k) => k !== r.kind));
+  }
+  function pyQ4() {
+    const T = akRnd(pyTrip), k = T[2] > 20 ? 1 : akInt(1, 3), a = T[0] * k, b = T[1] * k, c = T[2] * k, t = akInt(0, 4), hyp = [a + b, Math.abs(b - a), c + a];
+    const mk = (q, lines, r, u, cands) => akQ(q, lines, r + ' ' + u, pyOpts(r + ' ' + u, cands.map((x) => x + ' ' + u), (i) => (r + i + 1) + ' ' + u));
+    if (t === 0) return mk('Sebuah tangga panjangnya ' + c + ' m disandarkan pada tembok. Jarak kaki tangga ke tembok ' + a + ' m. Tinggi ujung atas tangga dari tanah adalah …', pySolve(1, c, a).lines, b, 'm', [c - a, c + a, c]);
+    if (t === 1) return mk('Sebuah lapangan berbentuk persegi panjang berukuran ' + a + ' m × ' + b + ' m. Panjang diagonal lapangan tersebut adalah …', pySolve(0, a, b).lines, c, 'm', hyp);
+    if (t === 2) {
+      const x1 = akInt(-5, 5), y1 = akInt(-5, 5), x2 = x1 + a * (Math.random() < 0.5 ? 1 : -1), y2 = y1 + b * (Math.random() < 0.5 ? 1 : -1);
+      return mk('Jarak antara titik P(' + pyMin(x1) + ', ' + pyMin(y1) + ') dan Q(' + pyMin(x2) + ', ' + pyMin(y2) + ') adalah … satuan', ['Selisih absis = |' + pyMin(x2) + ' − ' + alPr(x1) + '| = ' + a + ' dan selisih ordinat = |' + pyMin(y2) + ' − ' + alPr(y1) + '| = ' + b + '.'].concat(pySolve(0, a, b).lines.slice(1)), c, 'satuan', hyp);
+    }
+    if (t === 3) return mk('Sebuah kapal berlayar ' + a + ' km ke arah utara, kemudian ' + b + ' km ke arah timur. Jarak terdekat kapal dari titik awal adalah …', pySolve(0, a, b).lines, c, 'km', hyp);
+    return mk('Sebuah tiang setinggi ' + b + ' m ditopang kawat dari puncak tiang ke tanah. Jarak kaki kawat ke dasar tiang ' + a + ' m. Panjang kawat adalah …', pySolve(0, a, b).lines, c, 'm', hyp);
+  }
+  function b5Konsep(c) {
+    c.innerHTML = akRules(['Segitiga siku-siku punya satu sudut 90°. Dua sisi yang membentuk sudut itu disebut <b>sisi siku-siku</b> (a dan b).', 'Sisi di depan sudut siku-siku disebut <b>sisi miring</b> (c). Sisi ini selalu yang terpanjang.', 'Teorema Pythagoras: <b>c^[2] = a^[2] + b^[2]</b>. Luas persegi pada sisi miring sama dengan jumlah luas persegi pada kedua sisi siku-siku.', 'Rumus ini hanya berlaku untuk segitiga siku-siku.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Lihat sendiri</h3><p class="muted" style="margin:0 0 8px">Geser untuk mengubah panjang kedua sisi siku-siku.</p>' +
+      '<label style="display:block;margin:6px 0">Sisi a: <b id="pyav">3</b><input id="pya" type="range" min="1" max="12" value="3" style="width:100%"></label>' +
+      '<label style="display:block;margin:6px 0">Sisi b: <b id="pybv">4</b><input id="pyb" type="range" min="1" max="12" value="4" style="width:100%"></label>' +
+      '<div id="pyfig" style="text-align:center"></div><p id="pyout" style="margin:8px 0 0;font-size:17px"></p></div>' +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Tripel Pythagoras</h3><p style="margin:0">Tiga bilangan bulat yang cocok dengan rumus, misalnya <b>3, 4, 5</b>; <b>5, 12, 13</b>; <b>8, 15, 17</b>; <b>7, 24, 25</b>. Kelipatannya juga tripel, seperti 6, 8, 10 dan 9, 12, 15.</p></div>';
+    const draw = () => {
+      const a = +c.querySelector('#pya').value, b = +c.querySelector('#pyb').value, S = a * a + b * b, s = akSimp(S);
+      c.querySelector('#pyav').textContent = a; c.querySelector('#pybv').textContent = b;
+      c.querySelector('#pyfig').innerHTML = pyViz(a, b);
+      c.querySelector('#pyout').innerHTML = a + '² + ' + b + '² = ' + (a * a) + ' + ' + (b * b) + ' = ' + S + '<br>c² = ' + S + ', jadi c = ' + akFmt(pyRoot(S)) + (s.m === 1 ? ' (tripel Pythagoras)' : ' ≈ ' + pyDec(S));
+    };
+    c.querySelector('#pya').addEventListener('input', draw); c.querySelector('#pyb').addEventListener('input', draw); draw();
+    pyQuiz(c, pyQ1);
+  }
+  function b5Cari(c) {
+    c.innerHTML = akRules(['Kalau dua sisi siku-siku diketahui, cari sisi miring: <b>c = √[a^[2] + b^[2]]</b>.', 'Kalau sisi miring dan satu sisi siku-siku diketahui, cari sisi siku-siku lainnya: <b>b = √[c^[2] − a^[2]]</b>.', 'Kuadratkan dulu, jumlahkan atau kurangkan, lalu tarik akarnya.', 'Kalau hasilnya bukan kuadrat sempurna, sederhanakan bentuk akarnya (lihat Bab 3).']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Hitung sisi segitiga</h3><div class="chips" id="pyk" role="group" aria-label="Yang dicari"><button type="button" class="chip" data-k="0" aria-pressed="true">Cari sisi miring</button><button type="button" class="chip" data-k="1" aria-pressed="false">Cari sisi siku-siku</button></div>' +
+      '<div class="ansrow" style="margin-top:10px"><label><span id="pyl1">Sisi a</span> <input id="pyx" class="field" type="number" min="1" max="999" step="1" value="6" style="width:90px"></label><label><span id="pyl2">Sisi b</span> <input id="pyy" class="field" type="number" min="1" max="999" step="1" value="8" style="width:90px"></label><button type="button" class="btn" id="pygo">Hitung</button></div><div id="pyres" style="margin-top:10px"></div></div>';
+    let kind = 0;
+    const go = () => {
+      const r = pySolve(kind, pyInt(c.querySelector('#pyx').value), pyInt(c.querySelector('#pyy').value));
+      c.querySelector('#pyres').innerHTML = r.err ? '<div class="fb bad">' + r.err + '</div>' : '<ol style="margin:0;padding-left:20px">' + r.lines.map((l) => '<li style="margin:4px 0">' + akFmt(l) + '</li>').join('') + '</ol>';
+    };
+    c.querySelector('#pyk').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-k]'); if (!b) return; kind = +b.dataset.k;
+      c.querySelectorAll('#pyk .chip').forEach((x) => x.setAttribute('aria-pressed', String(+x.dataset.k === kind)));
+      c.querySelector('#pyl1').textContent = kind === 0 ? 'Sisi a' : 'Sisi miring c'; c.querySelector('#pyl2').textContent = kind === 0 ? 'Sisi b' : 'Sisi siku-siku a';
+      c.querySelector('#pyx').value = kind === 0 ? 6 : 13; c.querySelector('#pyy').value = kind === 0 ? 8 : 5; go();
+    });
+    c.querySelector('#pygo').addEventListener('click', go); go();
+    pyQuiz(c, pyQ2);
+  }
+  function b5Jenis(c) {
+    c.innerHTML = akRules(['Urutkan ketiga sisi, lalu ambil yang terpanjang sebagai c.', 'Cek dulu apakah bisa jadi segitiga: jumlah dua sisi terpendek harus lebih dari sisi terpanjang.', 'Jika a^[2] + b^[2] = c^[2], segitiganya <b>siku-siku</b>.', 'Jika a^[2] + b^[2] > c^[2], segitiganya <b>lancip</b>. Jika a^[2] + b^[2] < c^[2], segitiganya <b>tumpul</b>.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Cek jenis segitiga</h3><div class="ansrow"><input id="pyt1" class="field" type="number" min="1" max="999" value="5" style="width:80px" aria-label="Sisi 1"><input id="pyt2" class="field" type="number" min="1" max="999" value="12" style="width:80px" aria-label="Sisi 2"><input id="pyt3" class="field" type="number" min="1" max="999" value="13" style="width:80px" aria-label="Sisi 3"><button type="button" class="btn" id="pytgo">Periksa</button></div><div id="pytres" style="margin-top:10px"></div></div>';
+    const go = () => {
+      const r = pyKind([1, 2, 3].map((i) => pyInt(c.querySelector('#pyt' + i).value)));
+      c.querySelector('#pytres').innerHTML = '<p style="margin:0 0 6px"><b>' + r.kind + '</b></p><ol style="margin:0;padding-left:20px">' + r.lines.map((l) => '<li style="margin:4px 0">' + akFmt(l) + '</li>').join('') + '</ol>';
+    };
+    c.querySelector('#pytgo').addEventListener('click', go); go();
+    pyQuiz(c, pyQ3);
+  }
+  function b5Terap(c) {
+    c.innerHTML = akRules(['Gambar dulu bentuk soalnya. Cari segitiga siku-siku yang tersembunyi di dalamnya.', 'Tentukan mana sisi miring (di depan sudut siku-siku) dan mana sisi siku-sikunya.', 'Tangga yang bersandar, diagonal persegi panjang, jarak dua titik pada koordinat, dan arah mata angin (utara-timur) semuanya membentuk segitiga siku-siku.', 'Jarak dua titik: selisih absis jadi satu sisi, selisih ordinat jadi sisi lainnya, lalu pakai Pythagoras.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Contoh: tangga bersandar</h3><div style="text-align:center"><svg viewBox="0 0 240 170" style="width:100%;max-width:280px;height:auto" font-family="inherit" fill="currentColor" role="img" aria-label="Tangga bersandar pada tembok"><rect x="30" y="10" width="14" height="140" fill="#94a3b8" fill-opacity=".6"/><line x1="10" y1="150" x2="230" y2="150" stroke="currentColor" stroke-width="2"/><line x1="44" y1="30" x2="150" y2="150" stroke="#b45309" stroke-width="4"/><path d="M44 150H62V132" fill="none" stroke="currentColor"/><text x="104" y="76" fill="#b45309">tangga</text><text x="48" y="100">tinggi</text><text x="86" y="166">jarak kaki</text><text x="6" y="30">tembok</text></svg></div><p style="margin:6px 0 0">Tembok, tanah, dan tangga membentuk segitiga siku-siku. Tangga adalah sisi miringnya.</p></div>';
+    pyQuiz(c, pyQ4);
+  }
+  /* ---- halaman Bab 5 ---- */
+  const B5TABS = ['Konsep dan rumus', 'Mencari sisi', 'Jenis segitiga', 'Penerapan'];
+  const B5PANELS = [b5Konsep, b5Cari, b5Jenis, b5Terap];
+  const B5N = [
+    'Konsep dan rumus. Pada segitiga siku-siku, kuadrat sisi miring sama dengan jumlah kuadrat kedua sisi siku-siku. Ditulis c kuadrat sama dengan a kuadrat tambah b kuadrat. Sisi miring adalah sisi terpanjang, yang berada di depan sudut siku-siku.',
+    'Mencari sisi. Untuk mencari sisi miring, kuadratkan kedua sisi siku-siku, jumlahkan, lalu tarik akar. Untuk mencari sisi siku-siku, kuadratkan sisi miring dan sisi yang diketahui, kurangkan, lalu tarik akar.',
+    'Jenis segitiga. Ambil sisi terpanjang sebagai c. Kalau jumlah kuadrat dua sisi pendek sama dengan kuadrat c, segitiganya siku-siku. Kalau lebih besar, lancip. Kalau lebih kecil, tumpul.',
+    'Penerapan. Cari segitiga siku-siku di dalam soal cerita, tentukan sisi miringnya, lalu gunakan rumus Pythagoras. Contohnya tangga yang bersandar, diagonal lapangan, dan jarak dua titik.'
+  ];
+  const b5 = { tab: 0 };
+  function b5Audio() {
+    const bar = $('#b5bar'); if (!bar) return;
+    if (!TTS.ok) { bar.innerHTML = '<div class="card"><p class="muted" style="margin:0">Browser ini belum mendukung suara pembaca. Coba buka di Chrome, Edge, atau Safari.</p></div>'; return; }
+    bar.innerHTML = '<div class="card"><div class="ansrow"><button type="button" class="btn" id="spk">Dengarkan penjelasan</button></div></div>';
+    $('#spk').addEventListener('click', () => { if (TTS.on) { stopSpeech(); setSpkBtn(); } else speak(B5N[b5.tab]); });
+  }
+  function renderBab5() {
+    view.innerHTML = '<h2>Bab 5: Teorema Pythagoras</h2><p class="muted hide-s" style="margin:4px 0 0">Rumus Pythagoras, mencari sisi, jenis segitiga, dan soal cerita.</p>' +
+      '<div class="tabs" id="b5tabs" role="group" aria-label="Bagian materi" style="margin-top:12px">' + B5TABS.map((t, i) => '<button type="button" class="chip" data-t="' + i + '" aria-pressed="' + (i === b5.tab) + '">' + (i + 1) + '. ' + t + '</button>').join('') + '</div>' +
+      '<div id="b5bar"></div><div id="b5p"></div><div class="sd-nav" id="b5nav"></div>';
+    $('#b5tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (!b) return; b5.tab = +b.dataset.t; drawB5(true); });
+    $('#b5nav').addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (!b) return; b5.tab = +b.dataset.go; drawB5(true); });
+    drawB5(false);
+  }
+  function drawB5(scroll) {
+    stopSpeech(); stepper = null;
+    $$('#b5tabs .chip').forEach((c) => c.setAttribute('aria-pressed', String(+c.dataset.t === b5.tab)));
+    b5Audio();
+    const p = $('#b5p'); p.innerHTML = '';
+    B5PANELS[b5.tab](p);
+    const t = b5.tab;
+    $('#b5nav').innerHTML = (t > 0 ? '<button type="button" class="btn ghost" data-go="' + (t - 1) + '">‹ ' + B5TABS[t - 1] + '</button>' : '<span></span>') + (t < B5TABS.length - 1 ? '<button type="button" class="btn" data-go="' + (t + 1) + '">' + B5TABS[t + 1] + ' ›</button>' : '');
+    if (scroll) window.scrollTo(0, 0);
+  }
+  /* ===== BAB 5 END ===== */
+
+  /* ===== BAB 6 BEGIN ===== */
+  const plFr = (n, d) => { const g = akGcd(n, d) || 1; n /= g; d /= g; return n === 0 ? '0' : d === 1 ? String(n) : '{' + n + '|' + d + '}'; };
+  const plDec = (n, d) => String(+(n / d).toFixed(3)).replace('.', ',');
+  const plPct = (n, d) => String(+(n * 100 / d).toFixed(1)).replace('.', ',') + '%';
+  const plPrime = (n) => n > 1 && [2, 3, 5, 7, 11, 13, 17, 19, 23, 29].filter((p) => p < n).every((p) => n % p !== 0);
+  const plEnum = (S, f) => S.filter(f);
+  const plList = (a) => '{' + a.join(', ') + '}';
+  const PL_COLORS = [['merah', '#ef4444'], ['biru', '#3b82f6'], ['hijau', '#22c55e']];
+  const plOpts = (ans, cands, fb) => akUniq(ans, cands.filter((x) => x != null).map(String), fb);
+  function plProb(k, n, pre) { return (pre ? pre + ' ' : '') + 'P(A) = n(A) : n(S) = ' + k + '/' + n + ' = ' + plFr(k, n) + '.'; }
+  function plQ1() {
+    const t = akInt(0, 2);
+    if (t === 0) {
+      const c = [akInt(2, 9), akInt(2, 9), akInt(1, 8)], n = c[0] + c[1] + c[2], i = akInt(0, 2), neg = Math.random() < 0.35, k = neg ? n - c[i] : c[i], ans = plFr(k, n);
+      return akQ('Sebuah kotak berisi ' + c[0] + ' bola merah, ' + c[1] + ' bola biru, dan ' + c[2] + ' bola hijau. Satu bola diambil secara acak. Peluang terambil bola ' + (neg ? 'yang bukan ' : '') + PL_COLORS[i][0] + ' adalah …',
+        ['Banyak seluruh bola: n(S) = ' + c.join(' + ') + ' = ' + n + '.', 'Banyak bola yang dimaksud: n(A) = ' + (neg ? n + ' − ' + c[i] + ' = ' : '') + k + '.', plProb(k, n)], ans,
+        plOpts(ans, [plFr(n - k, n), n - k > 0 ? plFr(k, n - k) : null, plFr(k + 1, n), plFr(k, n + 1)], (j) => plFr(k + j, n + j)));
+    }
+    if (t === 1) {
+      const N = akRnd([10, 12, 15, 20, 24, 30]), m = akRnd([3, 4, 5]), opts = [['bilangan prima', (x) => plPrime(x)], ['bilangan genap', (x) => x % 2 === 0], ['kelipatan ' + m, (x) => x % m === 0], ['faktor dari ' + N, (x) => N % x === 0], ['bilangan lebih dari ' + (N - 4), (x) => x > N - 4]], o = akRnd(opts);
+      const S = Array.from({ length: N }, (_, j) => j + 1), A = plEnum(S, o[1]), k = A.length, ans = plFr(k, N);
+      return akQ('Sebuah kartu diambil secara acak dari ' + N + ' kartu bernomor 1 sampai ' + N + '. Peluang terambil kartu ' + o[0] + ' adalah …',
+        ['Ruang sampel: n(S) = ' + N + '.', 'Kartu ' + o[0] + ': ' + plList(A) + ', jadi n(A) = ' + k + '.', plProb(k, N)], ans, plOpts(ans, [plFr(k, N - k), plFr(N - k, N), plFr(k + 1, N), plFr(k, N + 1)], (j) => plFr(k + j, N)));
+    }
+    const L = akInt(5, 18), W = akInt(5, 18), n = L + W, ans = plFr(W, n);
+    return akQ('Dalam sebuah kelas terdapat ' + L + ' siswa laki-laki dan ' + W + ' siswa perempuan. Satu siswa dipilih secara acak sebagai ketua kelas. Peluang yang terpilih siswa perempuan adalah …',
+      ['Banyak seluruh siswa: n(S) = ' + L + ' + ' + W + ' = ' + n + '.', 'Siswa perempuan: n(A) = ' + W + '.', plProb(W, n)], ans, plOpts(ans, [plFr(L, n), plFr(W, L), plFr(W + 1, n), plFr(W, n + 1)], (j) => plFr(W + j, n)));
+  }
+  function plQ2() {
+    const t = akInt(0, 2);
+    if (t === 0) {
+      const S = ['AA', 'AG', 'GA', 'GG'], ev = akRnd([['muncul dua sisi angka', (s) => s === 'AA'], ['muncul tepat satu sisi angka', (s) => s === 'AG' || s === 'GA'], ['muncul paling sedikit satu sisi angka', (s) => s !== 'GG']]), A = plEnum(S, ev[1]), ans = plFr(A.length, 4);
+      return akQ('Dua koin dilempar bersamaan satu kali. Peluang ' + ev[0] + ' adalah …', ['Ruang sampel (A = angka, G = gambar): ' + plList(S) + ', jadi n(S) = 4.', 'Kejadian: ' + plList(A) + ', jadi n(A) = ' + A.length + '.', plProb(A.length, 4)], ans, plOpts(ans, [plFr(1, 2), plFr(1, 4), plFr(3, 4), plFr(1, 3)], (j) => plFr(j, 4 + j)));
+    }
+    if (t === 1) {
+      const m = akInt(3, 5), ev = akRnd([['mata dadu genap', (x) => x % 2 === 0], ['mata dadu prima', plPrime], ['mata dadu kurang dari ' + m, (x) => x < m], ['mata dadu faktor dari 6', (x) => 6 % x === 0], ['mata dadu lebih dari ' + (m - 1), (x) => x > m - 1]]), S = [1, 2, 3, 4, 5, 6], A = plEnum(S, ev[1]), ans = plFr(A.length, 6);
+      return akQ('Sebuah dadu dilempar satu kali. Peluang muncul ' + ev[0] + ' adalah …', ['Ruang sampel: ' + plList(S) + ', jadi n(S) = 6.', 'Kejadian: ' + plList(A) + ', jadi n(A) = ' + A.length + '.', plProb(A.length, 6)], ans, plOpts(ans, [plFr(A.length + 1, 6), plFr(A.length - 1, 6), plFr(A.length, 5), plFr(6 - A.length, 6)], (j) => plFr(j, 6 + j)));
+    }
+    const s = akInt(3, 11), kinds = [['jumlah kedua mata dadu sama dengan ' + s, (p) => p[0] + p[1] === s], ['jumlah kedua mata dadu kurang dari ' + s, (p) => p[0] + p[1] < s], ['kedua mata dadu sama', (p) => p[0] === p[1]], ['jumlah kedua mata dadu paling sedikit ' + (s + 1), (p) => p[0] + p[1] >= s + 1]], ev = akRnd(kinds), S = [];
+    for (let a = 1; a <= 6; a++) for (let b = 1; b <= 6; b++) S.push([a, b]);
+    const A = plEnum(S, ev[1]), k = A.length, ans = plFr(k, 36);
+    if (k === 0 || k === 36) return plQ2();
+    return akQ('Dua dadu dilempar bersamaan satu kali. Peluang muncul ' + ev[0] + ' adalah …', ['Setiap dadu punya 6 hasil, jadi n(S) = 6 × 6 = 36.', 'Kejadian: ' + (k <= 8 ? A.map((p) => '(' + p[0] + ',' + p[1] + ')').join(', ') + ', jadi ' : '') + 'n(A) = ' + k + '.', plProb(k, 36)], ans, plOpts(ans, [plFr(k, 12), plFr(k, 6), plFr(k + 1, 36), plFr(k - 1, 36), plFr(k, 35)], (j) => plFr(k + j + 1, 36)));
+  }
+  function plQ3() {
+    const t = akInt(0, 2);
+    if (t === 0) {
+      const N = akRnd([20, 40, 50, 60, 80, 100, 200]), k = akInt(3, N - 3), ans = plFr(k, N);
+      return akQ('Sebuah koin dilempar ' + N + ' kali dan sisi angka muncul ' + k + ' kali. Frekuensi relatif muncul sisi angka adalah …', ['Frekuensi relatif = banyak kejadian muncul : banyak percobaan.', k + ' : ' + N + ' = ' + ans + ' (= ' + plDec(k, N) + ').'], ans, plOpts(ans, [plFr(N - k, N), plFr(k, N - k), plFr(k + 1, N), plFr(1, 2)], (j) => plFr(k + j, N)));
+    }
+    if (t === 1) {
+      const N = 6 * akInt(5, 40), ev = akRnd([['mata dadu genap', 3], ['mata dadu prima', 3], ['mata dadu 6', 1], ['mata dadu kurang dari 3', 2], ['mata dadu lebih dari 4', 2]]), ans = N / 6 * ev[1];
+      return akQ('Sebuah dadu dilempar sebanyak ' + N + ' kali. Frekuensi harapan muncul ' + ev[0] + ' adalah …', ['Peluang muncul ' + ev[0] + ' adalah ' + ev[1] + '/6 = ' + plFr(ev[1], 6) + '.', 'Frekuensi harapan = peluang × banyak percobaan.', plFr(ev[1], 6) + ' × ' + N + ' = ' + ans + '.'], String(ans), plOpts(String(ans), [N - ans, N / 6, ans + 6, ans * 2], (j) => ans + j * 3));
+    }
+    const N = 2 * akInt(10, 100), ans = N / 2;
+    return akQ('Sebuah koin dilempar sebanyak ' + N + ' kali. Frekuensi harapan muncul sisi gambar adalah …', ['Peluang muncul sisi gambar adalah {1|2}.', 'Frekuensi harapan = {1|2} × ' + N + ' = ' + ans + '.'], String(ans), plOpts(String(ans), [N, N / 4, ans + 10, ans - 10], (j) => ans + j * 5));
+  }
+  function plQ4() {
+    const t = akInt(0, 3);
+    if (t === 0) {
+      const pct = Math.random() < 0.5;
+      if (pct) { const p = akRnd([5, 10, 15, 20, 25, 30, 35, 40, 45, 60, 65, 70]), ans = (100 - p) + '%'; return akQ('Menurut prakiraan cuaca, peluang besok hujan adalah ' + p + '%. Peluang besok tidak hujan adalah …', ['Peluang kejadian dan komplemennya berjumlah 100% (atau 1).', 'P(tidak hujan) = 100% − ' + p + '% = ' + ans + '.'], ans, plOpts(ans, [p + '%', (100 - p + 10) + '%', (p / 2) + '%'], (j) => (100 - p + j * 5) + '%')); }
+      const d = akRnd([5, 6, 8, 10, 12, 15, 20]), a = akInt(1, d - 1), ans = plFr(d - a, d);
+      return akQ('Peluang Dina lulus seleksi adalah ' + plFr(a, d) + '. Peluang Dina tidak lulus seleksi adalah …', ['Peluang kejadian dan komplemennya berjumlah 1.', 'P(tidak lulus) = 1 − ' + plFr(a, d) + ' = ' + plFr(d, d) + ' − ' + plFr(a, d) + ' = ' + ans + '.'], ans, plOpts(ans, [plFr(a, d), plFr(d - a, a), plFr(d - a + 1, d), plFr(a + 1, d)], (j) => plFr(d - a + j, d + j)));
+    }
+    const r = akInt(2, 7), b = akInt(2, 7), g = akInt(1, 6), n = r + b + g;
+    if (t === 1) {
+      const ans = plFr(r + b, n);
+      return akQ('Sebuah kotak berisi ' + r + ' bola merah, ' + b + ' bola biru, dan ' + g + ' bola hijau. Satu bola diambil secara acak. Peluang terambil bola merah atau biru adalah …', ['Kejadian merah dan biru tidak mungkin terjadi bersamaan (saling lepas), maka peluangnya dijumlahkan.', 'P(merah) = ' + plFr(r, n) + ' dan P(biru) = ' + plFr(b, n) + '.', 'P(merah atau biru) = ' + r + '/' + n + ' + ' + b + '/' + n + ' = ' + (r + b) + '/' + n + ' = ' + ans + '.'], ans, plOpts(ans, [plFr(r * b, n * n), plFr(r, n), plFr(b, n), plFr(g, n)], (j) => plFr(r + b + j, n)));
+    }
+    if (t === 2) {
+      const ans = plFr(r * r, n * n);
+      return akQ('Sebuah kotak berisi ' + r + ' bola merah, ' + b + ' bola biru, dan ' + g + ' bola hijau. Dua bola diambil satu per satu <b>dengan pengembalian</b>. Peluang kedua bola berwarna merah adalah …', ['Dengan pengembalian, isi kotak tetap ' + n + ' bola pada pengambilan kedua.', 'P(merah pertama) = ' + plFr(r, n) + ' dan P(merah kedua) = ' + plFr(r, n) + '.', 'Peluang keduanya merah = ' + plFr(r, n) + ' × ' + plFr(r, n) + ' = ' + ans + '.'], ans, plOpts(ans, [plFr(r * (r - 1), n * (n - 1)), plFr(2 * r, n), plFr(r, n), plFr(r * r, n)], (j) => plFr(r * r + j, n * n)));
+    }
+    const ans = plFr(r * (r - 1), n * (n - 1));
+    return akQ('Sebuah kotak berisi ' + r + ' bola merah, ' + b + ' bola biru, dan ' + g + ' bola hijau. Dua bola diambil satu per satu <b>tanpa pengembalian</b>. Peluang kedua bola berwarna merah adalah …', ['Tanpa pengembalian, setelah satu bola merah terambil, tersisa ' + (n - 1) + ' bola dan ' + (r - 1) + ' di antaranya merah.', 'P(merah pertama) = ' + plFr(r, n) + ' dan P(merah kedua) = ' + plFr(r - 1, n - 1) + '.', 'Peluang keduanya merah = ' + plFr(r, n) + ' × ' + plFr(r - 1, n - 1) + ' = ' + ans + '.'], ans, plOpts(ans, [plFr(r * r, n * n), plFr(2 * r, n), plFr(r, n), plFr(r * (r - 1), n * n)], (j) => plFr(r * (r - 1) + j, n * (n - 1))));
+  }
+  const plRes = (A, n) => 'n(A) = ' + A + ', n(S) = ' + n + '<br>P(A) = ' + akFmt(plFr(A, n)) + ' = ' + plDec(A, n) + ' = ' + plPct(A, n);
+  function b6Konsep(c) {
+    c.innerHTML = akRules(['<b>Percobaan</b> adalah kegiatan yang hasilnya belum pasti, misalnya melempar dadu atau mengambil bola.', '<b>Ruang sampel</b> (S) adalah himpunan semua hasil yang mungkin. <b>Kejadian</b> (A) adalah hasil yang kita perhatikan.', 'Peluang kejadian A: <b>P(A) = {n(A)|n(S)}</b>, yaitu banyak hasil yang dimaksud dibagi banyak semua hasil.', 'Nilai peluang selalu dari 0 sampai 1. Peluang 0 berarti mustahil, peluang 1 berarti pasti.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Kotak bola</h3><p class="muted" style="margin:0 0 8px">Ubah banyak bola, lalu lihat peluangnya.</p><div class="ansrow">' + PL_COLORS.map((x, i) => '<label>' + x[0] + ' <input id="plc' + i + '" class="field" type="number" min="0" max="20" step="1" value="' + [4, 3, 3][i] + '" style="width:70px"></label>').join('') + '</div><div id="plfig" style="text-align:center;margin-top:8px"></div><div id="plout" style="margin-top:6px"></div></div>';
+    const draw = () => {
+      const v = [0, 1, 2].map((i) => Math.max(0, Math.min(20, Math.round(+c.querySelector('#plc' + i).value) || 0))), n = v[0] + v[1] + v[2];
+      let dots = '', idx = 0;
+      v.forEach((k, i) => { for (let j = 0; j < k; j++, idx++) dots += '<circle cx="' + (14 + (idx % 12) * 24) + '" cy="' + (14 + Math.floor(idx / 12) * 24) + '" r="10" fill="' + PL_COLORS[i][1] + '" stroke="currentColor" stroke-opacity=".5"/>'; });
+      c.querySelector('#plfig').innerHTML = n ? '<svg viewBox="0 0 ' + (12 * 24 + 4) + ' ' + (Math.ceil(n / 12) * 24 + 4) + '" style="width:100%;max-width:320px;height:auto" role="img" aria-label="Bola-bola dalam kotak">' + dots + '</svg>' : '';
+      c.querySelector('#plout').innerHTML = n ? '<p style="margin:0 0 4px">n(S) = ' + v.join(' + ') + ' = ' + n + '</p>' + v.map((k, i) => '<p style="margin:2px 0">P(' + PL_COLORS[i][0] + ') = ' + akFmt(plFr(k, n)) + ' = ' + plPct(k, n) + '</p>').join('') : '<p class="muted" style="margin:0">Isi minimal satu bola.</p>';
+    };
+    c.querySelectorAll('.field').forEach((x) => x.addEventListener('input', draw)); draw();
+    pyQuiz(c, plQ1);
+  }
+  const PL_MODELS = (() => {
+    const two = [], dice = [1, 2, 3, 4, 5, 6], coin = ['AA', 'AG', 'GA', 'GG'];
+    for (let a = 1; a <= 6; a++) for (let b = 1; b <= 6; b++) two.push([a, b]);
+    const sumEv = []; for (let s = 2; s <= 12; s++) sumEv.push(['Jumlah mata = ' + s, (p) => p[0] + p[1] === s]);
+    return [
+      { name: 'Dua koin', S: coin, lab: (s) => s, ev: [['Dua angka', (s) => s === 'AA'], ['Tepat satu angka', (s) => s === 'AG' || s === 'GA'], ['Paling sedikit satu angka', (s) => s !== 'GG'], ['Dua gambar', (s) => s === 'GG']], cols: 4 },
+      { name: 'Satu dadu', S: dice, lab: (s) => s, ev: [['Genap', (x) => x % 2 === 0], ['Ganjil', (x) => x % 2 === 1], ['Prima', plPrime], ['Faktor dari 6', (x) => 6 % x === 0], ['Kurang dari 4', (x) => x < 4], ['Kelipatan 3', (x) => x % 3 === 0]], cols: 6 },
+      { name: 'Dua dadu', S: two, lab: (p) => p[0] + ',' + p[1], ev: sumEv.concat([['Kedua mata sama', (p) => p[0] === p[1]], ['Jumlah paling sedikit 10', (p) => p[0] + p[1] >= 10], ['Jumlah genap', (p) => (p[0] + p[1]) % 2 === 0]]), cols: 6 }
+    ];
+  })();
+  function b6Ruang(c) {
+    c.innerHTML = akRules(['Tulis semua hasil yang mungkin sebagai ruang sampel. Pada dua dadu ada 6 × 6 = 36 hasil, pada dua koin ada 2 × 2 = 4 hasil.', 'Tandai hasil yang memenuhi kejadian, lalu hitung banyaknya: n(A).', 'Peluang = n(A) : n(S). Sederhanakan pecahannya.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Ruang sampel</h3><div class="chips" id="plm" role="group" aria-label="Percobaan">' + PL_MODELS.map((m, i) => '<button type="button" class="chip" data-m="' + i + '" aria-pressed="' + (i === 2) + '">' + m.name + '</button>').join('') + '</div><div class="ansrow" style="margin-top:10px"><label>Kejadian <select id="ple" class="field" style="width:auto"></select></label></div><div id="plg" style="margin-top:10px"></div><div id="plr" style="margin-top:10px"></div></div>';
+    let mi = 2;
+    const draw = () => {
+      const M = PL_MODELS[mi], e = M.ev[+c.querySelector('#ple').value || 0], A = M.S.filter(e[1]).length;
+      c.querySelector('#plg').innerHTML = '<div style="display:grid;grid-template-columns:repeat(' + M.cols + ',1fr);gap:4px">' + M.S.map((s) => '<span style="padding:5px 2px;border:1px solid var(--line);border-radius:6px;text-align:center;font-size:' + (M.S.length > 6 ? 12 : 15) + 'px;' + (e[1](s) ? 'background:#fcd34d;color:#13203A;font-weight:700' : '') + '">' + M.lab(s) + '</span>').join('') + '</div>';
+      c.querySelector('#plr').innerHTML = plRes(A, M.S.length);
+    };
+    const fill = () => { c.querySelector('#ple').innerHTML = PL_MODELS[mi].ev.map((e, i) => '<option value="' + i + '">' + e[0] + '</option>').join(''); draw(); };
+    c.querySelector('#plm').addEventListener('click', (x) => { const b = x.target.closest('[data-m]'); if (!b) return; mi = +b.dataset.m; c.querySelectorAll('#plm .chip').forEach((y) => y.setAttribute('aria-pressed', String(+y.dataset.m === mi))); fill(); });
+    c.querySelector('#ple').addEventListener('change', draw); fill();
+    pyQuiz(c, plQ2);
+  }
+  function b6Frek(c) {
+    c.innerHTML = akRules(['<b>Frekuensi relatif</b> = banyak kejadian muncul : banyak percobaan. Nilainya dari hasil percobaan sungguhan.', 'Semakin banyak percobaan, frekuensi relatif semakin mendekati peluang teoretis.', '<b>Frekuensi harapan</b> = peluang × banyak percobaan. Ini perkiraan berapa kali kejadian akan muncul.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Simulasi lemparan</h3><div class="chips" id="plsm" role="group" aria-label="Percobaan"><button type="button" class="chip" data-m="0" aria-pressed="true">Koin (angka)</button><button type="button" class="chip" data-m="1" aria-pressed="false">Dadu (mata 6)</button></div>' +
+      '<div class="ansrow" style="margin-top:10px"><button type="button" class="btn" data-n="10">Lempar 10×</button><button type="button" class="btn" data-n="100">100×</button><button type="button" class="btn" data-n="1000">1000×</button><button type="button" class="btn ghost" id="plrs">Ulangi</button></div><div id="plsf" style="margin-top:10px;text-align:center"></div><div id="plso" style="margin-top:6px"></div>' +
+      '<hr style="border:0;border-top:1px solid var(--line);margin:12px 0"><div class="ansrow"><label>Frekuensi harapan untuk <input id="plN" class="field" type="number" min="1" max="100000" value="600" style="width:90px"> kali</label></div><div id="plh" style="margin-top:6px"></div></div>';
+    let mode = 0, N = 0, K = 0, hist = [];
+    const p = () => (mode === 0 ? [1, 2] : [1, 6]);
+    const show = () => {
+      const [pn, pd] = p(), W = 300, H = 140, pts = hist.map((v, i) => (hist.length > 1 ? 30 + (i / (hist.length - 1)) * (W - 40) : 30) + ',' + (H - 20 - v * (H - 40) / (mode === 0 ? 1 : 0.5)).toFixed(1)).join(' '), ty = H - 20 - (pn / pd) * (H - 40) / (mode === 0 ? 1 : 0.5);
+      c.querySelector('#plsf').innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:340px;height:auto" fill="currentColor" font-family="inherit" font-size="10" role="img" aria-label="Grafik frekuensi relatif"><line x1="30" y1="' + (H - 20) + '" x2="' + (W - 8) + '" y2="' + (H - 20) + '" stroke="currentColor" opacity=".6"/><line x1="30" y1="10" x2="30" y2="' + (H - 20) + '" stroke="currentColor" opacity=".6"/><line x1="30" y1="' + ty.toFixed(1) + '" x2="' + (W - 8) + '" y2="' + ty.toFixed(1) + '" stroke="#dc2626" stroke-dasharray="5 4"/><text x="34" y="' + (ty - 4).toFixed(1) + '" fill="#dc2626">peluang teoretis ' + plDec(pn, pd) + '</text><text x="4" y="' + (H - 17) + '">0</text><text x="4" y="16">' + (mode === 0 ? '1' : '0,5') + '</text>' + (hist.length > 1 ? '<polyline points="' + pts + '" fill="none" stroke="#2563eb" stroke-width="1.6"/>' : '') + '</svg>';
+      c.querySelector('#plso').innerHTML = N ? 'Percobaan: <b>' + N + '</b>, muncul: <b>' + K + '</b><br>Frekuensi relatif = ' + K + '/' + N + ' = <b>' + plDec(K, N) + '</b> (peluang teoretis ' + akFmt(plFr(pn, pd)) + ' = ' + plDec(pn, pd) + ')' : '<span class="muted">Tekan tombol lempar untuk mulai.</span>';
+    };
+    const exp = () => { const n = Math.max(1, Math.min(100000, Math.round(+c.querySelector('#plN').value) || 1)), [pn, pd] = p(); c.querySelector('#plh').innerHTML = akFmt(plFr(pn, pd)) + ' × ' + n + ' = <b>' + +(pn * n / pd).toFixed(2) + '</b> kali'.replace('.', ','); };
+    c.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-n]'), m = e.target.closest('#plsm [data-m]');
+      if (b) { const times = +b.dataset.n; for (let i = 0; i < times; i++) { N++; if (mode === 0 ? Math.random() < 0.5 : Math.floor(Math.random() * 6) === 5) K++; if (hist.length < 400 && (N <= 400 || N % 3 === 0)) hist.push(K / N); } show(); }
+      else if (e.target.id === 'plrs') { N = 0; K = 0; hist = []; show(); }
+      else if (m) { mode = +m.dataset.m; c.querySelectorAll('#plsm .chip').forEach((y) => y.setAttribute('aria-pressed', String(+y.dataset.m === mode))); N = 0; K = 0; hist = []; show(); exp(); }
+    });
+    c.querySelector('#plN').addEventListener('input', exp); show(); exp();
+    pyQuiz(c, plQ3);
+  }
+  function b6Majemuk(c) {
+    c.innerHTML = akRules(['<b>Komplemen</b>: peluang kejadian A tidak terjadi adalah P(A′) = 1 − P(A).', '<b>Saling lepas</b> (tidak mungkin terjadi bersamaan): P(A atau B) = P(A) + P(B).', '<b>Dua pengambilan dengan pengembalian</b>: isi kotak tetap, jadi peluangnya dikalikan.', '<b>Tanpa pengembalian</b>: setelah satu bola terambil, isi kotak berkurang. Pada pengambilan kedua, jumlah bola dan jumlah bola warna itu ikut berkurang.']) +
+      '<div class="card cmin-open"><h3 style="margin:0 0 6px">Dua kali pengambilan</h3><div class="ansrow"><label>merah <input id="plr" class="field" type="number" min="1" max="12" value="3" style="width:70px"></label><label>biru <input id="plb" class="field" type="number" min="1" max="12" value="2" style="width:70px"></label></div>' +
+      '<div class="chips" id="plw" role="group" aria-label="Cara pengambilan" style="margin-top:10px"><button type="button" class="chip" data-w="0" aria-pressed="true">Dengan pengembalian</button><button type="button" class="chip" data-w="1" aria-pressed="false">Tanpa pengembalian</button></div>' +
+      '<div class="ansrow" style="margin-top:10px"><label>Kejadian <select id="plk" class="field" style="width:auto"><option value="RR">Keduanya merah</option><option value="RB">Merah lalu biru</option><option value="BR">Biru lalu merah</option><option value="BB">Keduanya biru</option><option value="S">Warna sama</option><option value="D">Warna berbeda</option></select></label></div><div id="plmo" style="margin-top:10px"></div></div>';
+    let wr = 0;
+    const draw = () => {
+      const r = Math.max(1, Math.min(12, Math.round(+c.querySelector('#plr').value) || 1)), b = Math.max(1, Math.min(12, Math.round(+c.querySelector('#plb').value) || 1)), n = r + b, k = c.querySelector('#plk').value;
+      const f = (first, second) => { const a1 = first === 'R' ? r : b, a2 = (second === first && wr === 1) ? (second === 'R' ? r : b) - 1 : (second === 'R' ? r : b), d2 = wr === 1 ? n - 1 : n; return [a1, n, a2, d2]; };
+      const parts = k === 'S' ? ['RR', 'BB'] : k === 'D' ? ['RB', 'BR'] : [k], rows = [];
+      let num = 0, den = 0;
+      parts.forEach((t) => { const q = f(t[0], t[1]); rows.push('P(' + (t[0] === 'R' ? 'merah' : 'biru') + ' lalu ' + (t[1] === 'R' ? 'merah' : 'biru') + ') = ' + akFmt(plFr(q[0], q[1])) + ' × ' + akFmt(plFr(q[2], q[3])) + ' = ' + akFmt(plFr(q[0] * q[2], q[1] * q[3]))); den = q[1] * q[3]; num += q[0] * q[2]; });
+      c.querySelector('#plmo').innerHTML = '<p style="margin:0 0 4px">Isi kotak: ' + r + ' merah + ' + b + ' biru = ' + n + ' bola.' + (wr === 1 ? ' Pengambilan kedua: ' + (n - 1) + ' bola tersisa.' : '') + '</p>' + rows.map((x) => '<p style="margin:2px 0">' + x + '</p>').join('') + (parts.length > 1 ? '<p style="margin:2px 0">Dijumlahkan: ' + akFmt(plFr(num, den)) + '</p>' : '') + '<p style="margin:6px 0 0"><b>Peluang = ' + akFmt(plFr(num, den)) + ' = ' + plPct(num, den) + '</b></p>';
+    };
+    c.querySelector('#plw').addEventListener('click', (e) => { const x = e.target.closest('[data-w]'); if (!x) return; wr = +x.dataset.w; c.querySelectorAll('#plw .chip').forEach((y) => y.setAttribute('aria-pressed', String(+y.dataset.w === wr))); draw(); });
+    c.querySelectorAll('.field').forEach((x) => x.addEventListener(x.tagName === 'SELECT' ? 'change' : 'input', draw)); draw();
+    pyQuiz(c, plQ4);
+  }
+  const B6TABS = ['Konsep peluang', 'Ruang sampel', 'Frekuensi', 'Kejadian majemuk'];
+  const B6PANELS = [b6Konsep, b6Ruang, b6Frek, b6Majemuk];
+  const B6N = [
+    'Konsep peluang. Peluang suatu kejadian sama dengan banyak hasil yang dimaksud dibagi banyak semua hasil yang mungkin. Nilainya selalu antara nol dan satu. Nol berarti mustahil dan satu berarti pasti.',
+    'Ruang sampel. Tulis semua hasil yang mungkin. Dua koin punya empat hasil, satu dadu punya enam hasil, dan dua dadu punya tiga puluh enam hasil. Hitung hasil yang memenuhi kejadian, lalu bagi dengan banyak semua hasil.',
+    'Frekuensi. Frekuensi relatif adalah banyak kejadian muncul dibagi banyak percobaan. Semakin banyak percobaan, nilainya mendekati peluang teoretis. Frekuensi harapan sama dengan peluang dikali banyak percobaan.',
+    'Kejadian majemuk. Peluang komplemen adalah satu dikurangi peluang kejadiannya. Untuk kejadian saling lepas, peluangnya dijumlahkan. Pada dua pengambilan, peluangnya dikalikan. Kalau tanpa pengembalian, isi kotak berkurang pada pengambilan kedua.'
+  ];
+  const b6 = { tab: 0 };
+  function b6Audio() {
+    const bar = $('#b6bar'); if (!bar) return;
+    if (!TTS.ok) { bar.innerHTML = '<div class="card"><p class="muted" style="margin:0">Browser ini belum mendukung suara pembaca. Coba buka di Chrome, Edge, atau Safari.</p></div>'; return; }
+    bar.innerHTML = '<div class="card"><div class="ansrow"><button type="button" class="btn" id="spk">Dengarkan penjelasan</button></div></div>';
+    $('#spk').addEventListener('click', () => { if (TTS.on) { stopSpeech(); setSpkBtn(); } else speak(B6N[b6.tab]); });
+  }
+  function renderBab6() {
+    view.innerHTML = '<h2>Bab 6: Peluang</h2><p class="muted hide-s" style="margin:4px 0 0">Konsep peluang, ruang sampel, frekuensi, dan kejadian majemuk.</p>' +
+      '<div class="tabs" id="b6tabs" role="group" aria-label="Bagian materi" style="margin-top:12px">' + B6TABS.map((t, i) => '<button type="button" class="chip" data-t="' + i + '" aria-pressed="' + (i === b6.tab) + '">' + (i + 1) + '. ' + t + '</button>').join('') + '</div>' +
+      '<div id="b6bar"></div><div id="b6p"></div><div class="sd-nav" id="b6nav"></div>';
+    $('#b6tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (!b) return; b6.tab = +b.dataset.t; drawB6(true); });
+    $('#b6nav').addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (!b) return; b6.tab = +b.dataset.go; drawB6(true); });
+    drawB6(false);
+  }
+  function drawB6(scroll) {
+    stopSpeech(); stepper = null;
+    $$('#b6tabs .chip').forEach((c) => c.setAttribute('aria-pressed', String(+c.dataset.t === b6.tab)));
+    b6Audio();
+    const p = $('#b6p'); p.innerHTML = '';
+    B6PANELS[b6.tab](p);
+    const t = b6.tab;
+    $('#b6nav').innerHTML = (t > 0 ? '<button type="button" class="btn ghost" data-go="' + (t - 1) + '">‹ ' + B6TABS[t - 1] + '</button>' : '<span></span>') + (t < B6TABS.length - 1 ? '<button type="button" class="btn" data-go="' + (t + 1) + '">' + B6TABS[t + 1] + ' ›</button>' : '');
+    if (scroll) window.scrollTo(0, 0);
+  }
+  /* ===== BAB 6 END ===== */
+
   /* ===== TKA GENERATORS BEGIN ===== */
   const tkI = akInt, tkP = akRnd;
   const tkN = (n) => { const s = String(Math.abs(Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); return (n < 0 ? '−' : '') + s; };
@@ -6298,7 +6647,7 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
   }
 
 
-  const ROUTES = { beranda: renderHome, materi: renderMateri, bab2: renderBab2, bab3: renderBab3, bab4: renderBab4, tka: renderTKA, tka2025: renderTKA25, tryout1: renderTO1, sd: renderSD, challenge: renderChallenge, uraian: renderUraian, latihan: renderLatihan };
+  const ROUTES = { beranda: renderHome, materi: renderMateri, bab2: renderBab2, bab3: renderBab3, bab4: renderBab4, bab5: renderBab5, bab6: renderBab6, tka: renderTKA, tka2025: renderTKA25, tryout1: renderTO1, sd: renderSD, challenge: renderChallenge, uraian: renderUraian, latihan: renderLatihan };
   function route() {
     let h = (location.hash || '').replace('#', '');
     if (h === 'trik' || h === 'bagi') { sds.sub = h === 'trik' ? 'kali' : 'bagi'; sds.tab = h === 'trik' ? SDMODS.kali.t.length - 1 : 0; h = 'sd'; try { history.replaceState(null, '', '#sd'); } catch (e) { /* abaikan */ } }
@@ -6362,6 +6711,8 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { sdPairs, sdDo
       '<a class="mcard" href="#bab2"><h3>Bab 2: Bilangan Berpangkat</h3><p>Perkalian, pembagian, pemangkatan, akar, kuadrat cepat, serta FPB dan KPK dengan metode Gasing, lengkap dengan soal dari buku.</p><span class="st">10 bagian</span></a>' +
       '<a class="mcard" href="#bab3"><h3>Bab 3: Bentuk Akar</h3><p>Akar kuadrat, perkalian, pembagian, penjumlahan, pengurangan, dan merasionalkan penyebut, dengan langkah demi langkah dan audio.</p><span class="st">5 bagian</span></a>' +
       '<a class="mcard" href="#bab4"><h3>Bab 4: Aljabar</h3><p>Konsep aljabar, operasi, pemfaktoran, persamaan linear satu dan dua variabel, serta pertidaksamaan linear, dengan langkah demi langkah dan audio.</p><span class="st">5 bagian</span></a>' +
+      '<a class="mcard" href="#bab5"><h3>Bab 5: Teorema Pythagoras</h3><p>Rumus Pythagoras dengan gambar interaktif, mencari sisi miring dan sisi siku-siku, jenis segitiga, serta soal cerita, lengkap dengan latihan dan audio.</p><span class="st">4 bagian</span></a>' +
+      '<a class="mcard" href="#bab6"><h3>Bab 6: Peluang</h3><p>Konsep peluang, ruang sampel koin dan dadu, frekuensi relatif dan harapan dengan simulasi lemparan, serta kejadian majemuk, lengkap dengan latihan dan audio.</p><span class="st">4 bagian</span></a>' +
       '<a class="mcard" href="#tka"><h3>Latihan TKA</h3><p>Soal latihan bergaya TKA Matematika SMP mengikuti 10 elemen kisi-kisi: pilihan ganda dan pernyataan benar-salah, dengan pembahasan.</p><span class="st">10 bagian + campuran</span></a>' +
       '<a class="mcard" href="#tka2025"><h3>TKA 2025</h3><p>30 soal TKA Matematika SMP 2025 dari naskah asli, lengkap dengan gambar, kunci, dan pembahasan.</p><span class="st">30 soal bergambar</span></a>' +
       '<a class="mcard" href="#sd"><h3>Materi SD</h3><p>Penjumlahan, pengurangan, perkalian (dan triknya), pembagian, dan pecahan, dengan gambar dan audio penjelasan.</p><span class="st">' + (store.sd && store.sd.total ? store.sd.ok + ' benar dari ' + store.sd.total : 'Penjumlahan 9 bagian, pengurangan 4 bagian, perkalian 7 bagian, pembagian 3 bagian, pecahan 6 bagian') + '</span></a>' +
